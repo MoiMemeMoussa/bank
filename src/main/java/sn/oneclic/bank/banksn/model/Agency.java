@@ -16,15 +16,19 @@ public class Agency {
     }
 
     public Agency(String name, String address, Bank bank) {
+        verifyData(name, address, bank);
+        this.name = name;
+        this.address = address;
+
+    }
+
+    private void verifyData(String name, String address, Bank bank) {
         if (bank == null)
             throw new NullPointerException(" an agency must be  linked to a bank !!!! ");
         if (name == null)
             throw new NullPointerException(" an agency must have a name !!! ");
         if (address == null)
             throw new NullPointerException(" an agency must have an address !!! ");
-        this.name = name;
-        this.address = address;
-
     }
 
     public String getName() {

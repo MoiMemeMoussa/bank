@@ -15,15 +15,19 @@ public class Account {
     }
 
     public Account(Agency agency, String accountNumber, int balance) throws AccountException {
+        verfifyCreation(agency, accountNumber, balance);
+        this.agency = agency;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+    }
+
+    private void verfifyCreation(Agency agency, String accountNumber, int balance) throws AccountException {
         if (agency == null)
             throw new NullPointerException(" account cannot be opened without agency ");
         if (accountNumber == null)
             throw new NullPointerException(" account cannot be opened without accountNumber ");
         if (balance < 10000)
             throw new AccountException();
-        this.agency = agency;
-        this.accountNumber = accountNumber;
-        this.balance = balance;
     }
 
     private String getAccountNumber() {

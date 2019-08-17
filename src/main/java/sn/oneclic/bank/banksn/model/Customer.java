@@ -14,6 +14,15 @@ public class Customer {
     private String identityNumber;
 
     public Customer(String name, String address, String identityNumber, Account account) throws NullPointerException, AccountException {
+        verifyIfNull(name, identityNumber, account);
+        this.name = name;
+        this.address = address;
+        this.identityNumber = identityNumber;
+        this.listAccount.add(account);
+
+    }
+
+    private void verifyIfNull(String name, String identityNumber, Account account) throws AccountException {
         if (account == null)
             throw new NullPointerException(" customer must have an account !!! ");
         if (account.getBalance() < 10000)
@@ -22,11 +31,6 @@ public class Customer {
             throw new NullPointerException(" customer must have an identity number !!! ");
         if (name == null)
             throw new NullPointerException(" customer must have a name !!! ");
-        this.name = name;
-        this.address = address;
-        this.identityNumber = identityNumber;
-        this.listAccount.add(account);
-
     }
 
     public String getName() {
