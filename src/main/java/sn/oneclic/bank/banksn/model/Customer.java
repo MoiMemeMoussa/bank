@@ -1,7 +1,5 @@
 package sn.oneclic.bank.banksn.model;
 
-import sn.oneclic.bank.banksn.exceptions.AccountException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +11,7 @@ public class Customer {
     private String address;
     private String identityNumber;
 
-    public Customer(String name, String address, String identityNumber, Account account) throws NullPointerException, AccountException {
+    public Customer(String name, String address, String identityNumber, Account account) {
         verifyIfNull(name, identityNumber, account);
         this.name = name;
         this.address = address;
@@ -22,11 +20,9 @@ public class Customer {
 
     }
 
-    private void verifyIfNull(String name, String identityNumber, Account account) throws AccountException {
+    private void verifyIfNull(String name, String identityNumber, Account account) {
         if (account == null)
             throw new NullPointerException(" customer must have an account !!! ");
-        if (account.getBalance() < 10000)
-            throw new AccountException();
         if (identityNumber == null)
             throw new NullPointerException(" customer must have an identity number !!! ");
         if (name == null)
@@ -78,5 +74,18 @@ public class Customer {
                 ", address='" + address + '\'' +
                 ", identityNumber='" + identityNumber + '\'' +
                 '}';
+    }
+
+    private List<Account> getListAccount() {
+        return listAccount;
+    }
+
+    public Customer findCustomerByAccountNumber(String accountNumber) {
+        Customer customer = null;
+        for (Account account : getListAccount()) {
+            if (account.getAccountNumber().equals(accountNumber))
+                customer = account.getCustomer();
+        }
+        return customer;
     }
 }

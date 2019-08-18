@@ -1,7 +1,5 @@
 package sn.oneclic.bank.banksn.model;
 
-import sn.oneclic.bank.banksn.exceptions.AccountException;
-
 import java.util.Objects;
 
 public class Account {
@@ -9,29 +7,33 @@ public class Account {
     private Agency agency;
     private String accountNumber;
     private int balance;
+    private Customer customer;
 
     public Account() {
 
     }
 
-    public Account(Agency agency, String accountNumber, int balance) throws AccountException {
-        verfifyCreation(agency, accountNumber, balance);
+    public Account(Agency agency, String accountNumber) {
+        verifyIfNull(agency, accountNumber);
         this.agency = agency;
         this.accountNumber = accountNumber;
-        this.balance = balance;
+
     }
 
-    private void verfifyCreation(Agency agency, String accountNumber, int balance) throws AccountException {
+    private void verifyIfNull(Agency agency, String accountNumber) {
         if (agency == null)
             throw new NullPointerException(" account cannot be opened without agency ");
         if (accountNumber == null)
             throw new NullPointerException(" account cannot be opened without accountNumber ");
-        if (balance < 10000)
-            throw new AccountException();
+
     }
 
-    private String getAccountNumber() {
+    String getAccountNumber() {
         return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     int getBalance() {
@@ -55,6 +57,22 @@ public class Account {
         return Objects.hash(accountNumber);
     }
 
+    public Agency getAgency() {
+        return agency;
+    }
+
+    public void setAgency(Agency agency) {
+        this.agency = agency;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -62,4 +80,10 @@ public class Account {
                 ", balance=" + balance +
                 '}';
     }
+
+    public void openAcccount(Customer customer, Account account) {
+        account.setCustomer(customer);
+    }
+
+
 }

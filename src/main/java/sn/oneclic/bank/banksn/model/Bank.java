@@ -1,10 +1,13 @@
 package sn.oneclic.bank.banksn.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Bank {
     private int id;
     private String name;
+    private List<Agency> listAgency = new ArrayList<>();
 
     public Bank() {
 
@@ -44,5 +47,15 @@ public class Bank {
                 "id = '" + id + '\'' +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    public List<Agency> getListAgency() {
+        return listAgency;
+    }
+
+    public void addAgency(Agency agency) {
+        if (agency == null)
+            throw new NullPointerException(" agency cannot be null !! ");
+        this.listAgency.add(agency);
     }
 }
