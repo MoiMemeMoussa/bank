@@ -32,12 +32,13 @@ public class Account {
         this.balance = this.balance + mountant;
     }
 
-    public void takeFromAcount(int mountant) {
+    public void debit(int mountant) {
         this.balance = this.balance - mountant;
     }
 
     public void transfer(Account account, int mountant) {
         account.setBalance(account.getBalance() + mountant);
+        this.setBalance(balance - mountant);
     }
 
 

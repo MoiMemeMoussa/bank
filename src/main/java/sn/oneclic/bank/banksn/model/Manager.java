@@ -2,7 +2,10 @@ package sn.oneclic.bank.banksn.model;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import sn.oneclic.bank.banksn.exceptions.BankException;
+import sn.oneclic.bank.banksn.exceptions.ManagerException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -15,9 +18,9 @@ public class Manager {
 
     private Bank bank;
     private Agency agency;  // a manager is affected in one agency
-    private List<Account> accountList;
+    private List<Account> accountList = new ArrayList<>();
 
-    public Manager(String name, int phone, Bank bank, Agency agency) {
+    public Manager(String name, int phone, Bank bank, Agency agency) throws BankException, ManagerException {
         verifyIfNull(bank, name);
         id++;
         this.name = name;
@@ -26,11 +29,11 @@ public class Manager {
         this.agency = agency;
     }
 
-    private void verifyIfNull(Bank bank, String name) {
+    private void verifyIfNull(Bank bank, String name) throws BankException, ManagerException {
         if (bank == null)
-            throw new NullPointerException(" Manager must be in a bank !!");
+            throw new BankException();
         else if (name == null)
-            throw new NullPointerException(" Manager must have a name!!");
+            throw new ManagerException();
 
     }
 
