@@ -1,91 +1,36 @@
 package sn.oneclic.bank.banksn.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+
+@Slf4j
+@Getter
 public class Customer {
-    private List<Account> listAccount = new ArrayList<>();
-    private int customerNumber;
+
+    private int id;
     private String name;
     private String address;
-    private String identityNumber;
+    private int phone;
 
-    public Customer(String name, String address, String identityNumber, Account account) {
-        verifyIfNull(name, identityNumber, account);
+    private Bank bank;
+    private ArrayList<Account> accountList = new ArrayList<>();
+
+    protected Customer(int id, String name, String address, @NotNull int phone) {
+        this.id = id;
         this.name = name;
         this.address = address;
-        this.identityNumber = identityNumber;
-        this.listAccount.add(account);
-
+        this.phone = phone;
     }
 
-    private void verifyIfNull(String name, String identityNumber, Account account) {
+    public void verify(Account account, Manager manager, String name, int phone) {
         if (account == null)
-            throw new NullPointerException(" customer must have an account !!! ");
-        if (identityNumber == null)
-            throw new NullPointerException(" customer must have an identity number !!! ");
-        if (name == null)
-            throw new NullPointerException(" customer must have a name !!! ");
+            throw new NullPointerException(" customer must have account !!! ");
+        else if (name == null)
+            throw new NullPointerException(" customer must have name  !!! ");
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getIdentityNumber() {
-        return identityNumber;
-    }
-
-    public void setIdentityNumber(String identityNumber) {
-        this.identityNumber = identityNumber;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return customerNumber == customer.customerNumber;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(customerNumber);
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "customerNumber=" + customerNumber +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", identityNumber='" + identityNumber + '\'' +
-                '}';
-    }
-
-    private List<Account> getListAccount() {
-        return listAccount;
-    }
-
-    public Customer findCustomerByAccountNumber(String accountNumber) {
-        Customer customer = null;
-        for (Account account : getListAccount()) {
-            if (account.getAccountNumber().equals(accountNumber))
-                customer = account.getCustomer();
-        }
-        return customer;
-    }
 }

@@ -1,61 +1,99 @@
 package sn.oneclic.bank.banksn.model;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+@Slf4j
+@Getter
 public class Bank {
-    private int id;
+
+    private static int id;
     private String name;
-    private List<Agency> listAgency = new ArrayList<>();
 
-    public Bank() {
+    private List<Agency> agencyList = new ArrayList<>();
+    private List<Account> accountList = new ArrayList<>();
+    private List<Manager> managerList = new ArrayList<>();
+    private List<Customer> customerList = new ArrayList<>();
 
-    }
-
-    public Bank(int id, String name) {
+    public Bank(String name) {
         if (name == null)
-            throw new NullPointerException(" bank must have a name !!! ");
-        this.id = id;
+            throw new NullPointerException(" a bank must have a name !! ");
+        id++;
         this.name = name;
     }
 
-    public int getId() {
-        return this.id;
+
+    public void addAgency(String address, int phone) {
+        Agency agency1 = new Agency(address, phone, this);
+        this.agencyList.add(agency1);
     }
 
-    public String getName() {
-        return name;
+    public void addManager(Agency agency, String name, int phone) {
+        this.managerList.add(new Manager(name, phone, this, agency));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Bank bank = (Bank) o;
-        return Objects.equals(name, bank.name);
+    public Customer addCustomer(int id, String name, String address, int phone) {
+        Customer customer = new Customer(id, name, address, phone);
+        this.customerList.add(customer);
+        return customer;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
+    public void addAccount(Customer customer, String accountNumber, int balance) {
+        this.accountList.add(new Account(this, accountNumber, balance, customer));
     }
 
-    @Override
-    public String toString() {
-        return "Bank{" +
-                "id = '" + id + '\'' +
-                "name='" + name + '\'' +
-                '}';
+
+    public String findCustomerByAccountNumber(String accountNumber) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Account account : accountList) {
+            if (account.getAccountNumber().equals(accountNumber)) {
+                stringBuilder.append(" Customer name  => ");
+                stringBuilder.append(account.getCustomer().getName());
+                stringBuilder.append('\n');
+
+                stringBuilder.append(" Customer phone  => ");
+                stringBuilder.append(account.getCustomer().getPhone());
+                stringBuilder.append('\n');
+
+                stringBuilder.append(" Customer address  => ");
+                stringBuilder.append(account.getCustomer().getAddress());
+                stringBuilder.append('\n');
+            }
+        }
+        return stringBuilder.toString();
     }
 
-    public List<Agency> getListAgency() {
-        return listAgency;
+    public void showAgencies() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Agency agency : getAgencyList()) {
+            stringBuilder.append(" [ Agency ]");
+
+            stringBuilder.append(" Address = ");
+            stringBuilder.append(agency.getAddress());
+            stringBuilder.append('\n');
+
+            stringBuilder.append(" Phone = ");
+            stringBuilder.append(agency.getPhone());
+            stringBuilder.append('\n');
+        }
     }
 
-    public void addAgency(Agency agency) {
-        if (agency == null)
-            throw new NullPointerException(" agency cannot be null !! ");
-        this.listAgency.add(agency);
+    public void showManagers() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Manager manager : getManagerList()) {
+            stringBuilder.append(" [ Manager ]");
+            stringBuilder.append(" Name = ");
+            stringBuilder.append(manager.getName());
+            stringBuilder.append('\n');
+
+            stringBuilder.append(" Phone = ");
+            stringBuilder.append(manager.getPhone());
+            stringBuilder.append('\n');
+        }
     }
+
+
 }

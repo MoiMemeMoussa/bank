@@ -1,88 +1,43 @@
 package sn.oneclic.bank.banksn.model;
 
-import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Getter
+@Setter
 public class Account {
 
-    private Agency agency;
     private String accountNumber;
     private int balance;
+
+    private Bank bank;
     private Customer customer;
+    private Manager manager; // an account has 1 manager
 
     public Account() {
 
     }
 
-    public Account(Agency agency, String accountNumber) {
-        verifyIfNull(agency, accountNumber);
-        this.agency = agency;
+    //creation d'un compte temporaire
+    protected Account(Bank bank, String accountNumber, int balance, Customer customer) {
+        this.bank = bank;
         this.accountNumber = accountNumber;
-
-    }
-
-    private void verifyIfNull(Agency agency, String accountNumber) {
-        if (agency == null)
-            throw new NullPointerException(" account cannot be opened without agency ");
-        if (accountNumber == null)
-            throw new NullPointerException(" account cannot be opened without accountNumber ");
-
-    }
-
-    String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    int getBalance() {
-        return balance;
-    }
-
-    public void setBalance(int balance) {
         this.balance = balance;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return accountNumber.equals(account.accountNumber);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(accountNumber);
-    }
-
-    public Agency getAgency() {
-        return agency;
-    }
-
-    public void setAgency(Agency agency) {
-        this.agency = agency;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
-    @Override
-    public String toString() {
-        return "Account{" +
-                "accountNumber=" + accountNumber +
-                ", balance=" + balance +
-                '}';
+    public void credit(int mountant) {
+        this.balance = this.balance + mountant;
     }
 
-    public void openAcccount(Customer customer, Account account) {
-        account.setCustomer(customer);
+    public void takeFromAcount(int mountant) {
+        this.balance = this.balance - mountant;
+    }
+
+    public void transfer(Account account, int mountant) {
+        account.setBalance(account.getBalance() + mountant);
     }
 
 
