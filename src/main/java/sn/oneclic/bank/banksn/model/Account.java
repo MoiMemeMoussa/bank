@@ -3,6 +3,8 @@ package sn.oneclic.bank.banksn.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import sn.oneclic.bank.banksn.exceptions.AccountException;
+
 
 @Slf4j
 @Getter
@@ -28,17 +30,26 @@ public class Account {
         this.customer = customer;
     }
 
-    public void credit(int mountant) {
-        this.balance = this.balance + mountant;
+    public void credit(int sum) {
+        this.balance = this.balance + sum;
     }
 
-    public void debit(int mountant) {
-        this.balance = this.balance - mountant;
+    public void debit(int sum) throws AccountException {
+        if (this.balance >= sum) {
+            this.balance = this.balance - sum;
+        } else {
+            throw new AccountException(" debit impossible, your balance is " + this.balance);
+        }
     }
 
-    public void transfer(Account account, int mountant) {
-        account.setBalance(account.getBalance() + mountant);
-        this.setBalance(balance - mountant);
+    public void transfer(Account account, int sum) throws AccountException {
+        if (this.balance >= sum) {
+            account.setBalance(account.getBalance() + sum);
+            this.debit(sum);
+        } else {
+            throw new AccountException(" transfer impossible, your balance is " + this.balance);
+        }
+
     }
 
 

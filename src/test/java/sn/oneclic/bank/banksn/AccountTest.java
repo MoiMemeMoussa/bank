@@ -3,8 +3,10 @@ package sn.oneclic.bank.banksn;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sn.oneclic.bank.banksn.exceptions.AccountException;
 import sn.oneclic.bank.banksn.exceptions.AgencyException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
+import sn.oneclic.bank.banksn.model.Account;
 import sn.oneclic.bank.banksn.model.Bank;
 
 class AccountTest {
@@ -46,8 +48,12 @@ class AccountTest {
         bank.affectAccountToCustomer(bank.getCustomerList().get(0), "01051985", 1200);
         bank.affectAccountToCustomer(bank.getCustomerList().get(1), "025082014", 4000);
 
-        bank.getAccountList().get(0).debit(600);
-        bank.getAccountList().get(1).debit(2000);
+        try {
+            bank.getAccountList().get(0).debit(600);
+            bank.getAccountList().get(1).debit(2000);
+        } catch (AccountException accountException) {
+            accountException.printStackTrace();
+        }
 
         Assertions.assertEquals(600, bank.getAccountList().get(0).getBalance());
         Assertions.assertEquals(2000, bank.getAccountList().get(1).getBalance());
@@ -61,16 +67,37 @@ class AccountTest {
 
         bank.affectAccountToCustomer(bank.getCustomerList().get(0), "01051985", 1200);
         bank.affectAccountToCustomer(bank.getCustomerList().get(1), "025082014", 15000);
+        Account sender = bank.getAccountList().get(0);
+        Account recipient = bank.getAccountList().get(1);
+        try {
+            sender.transfer(recipient, 1200);
+        } catch (AccountException accountException) {
+            accountException.printStackTrace();
+        }
+        Assertions.assertEquals(0, sender.getBalance());
+        Assertions.assertEquals(16200, recipient.getBalance());
 
-        // TODO: it might not be possible to transfer more than the balance of account
-        // TODO : raise an exception if mountant to transfer is greater than sold
+    }
 
-        //transfert of 1000 from account 1 to account 2
-        bank.getAccountList().get(0).transfer(
-                bank.getAccountList().get(1), 1200);
-        Assertions.assertEquals(0, bank.getAccountList().get(0).getBalance());
-        Assertions.assertEquals(16200, bank.getAccountList().get(1).getBalance());
+    @Test
+    void test_exception_when_debit_sum_less_than_balance() {
+        bank.addCustomer(1, "Claude Bento", " Montpellier", 605527749);
+        bank.addCustomer(2, "Rahim Nouraly", "Occitanie", 741525669);
+        bank.affectAccountToCustomer(bank.getCustomerList().get(0), "01051985", 1000);
+        Assertions.assertThrows(AccountException.class, () -> bank.getAccountList().get(0).debit(2500));
 
+    }
+
+    @Test
+    void test_exception_when_transfer_sum_less_than_balance() {
+        bank.addCustomer(1, "Claude Bento", " Montpellier", 605527749);
+        bank.addCustomer(2, "Rahim Nouraly", "Occitanie", 741525669);
+
+        bank.affectAccountToCustomer(bank.getCustomerList().get(0), "01051985", 1200);
+        bank.affectAccountToCustomer(bank.getCustomerList().get(1), "025082014", 15000);
+        Account sender = bank.getAccountList().get(0);
+        Account recipient = bank.getAccountList().get(1);
+        Assertions.assertThrows(AccountException.class, () -> sender.transfer(recipient, 14000));
 
     }
 
