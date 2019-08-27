@@ -3,7 +3,10 @@ package sn.oneclic.bank.banksn.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import sn.oneclic.bank.banksn.BankUtils;
 import sn.oneclic.bank.banksn.exceptions.AccountException;
+
+import java.util.logging.Logger;
 
 
 @Slf4j
@@ -17,6 +20,7 @@ public class Account {
     private Bank bank;
     private Customer customer;
     private Manager manager; // an account has 1 manager
+    private static Logger logger = Logger.getLogger("Account");
 
     public Account() {
 
@@ -52,5 +56,33 @@ public class Account {
 
     }
 
+    public Account creditAccount() {
+        int sum = Integer.parseInt(BankUtils.doOperation(" Enter sum to credit  "));
+        this.credit(sum);
+        logger.info(" OK >>> Account credited " + sum + "  >>> new balance = " + this.getBalance());
+        return this;
+    }
 
+    public Account debitAccount() {
+        int sum = Integer.parseInt(BankUtils.doOperation(" Enter sum to take off   "));
+        logger.info(" OK >>> Account debited of " + sum + "  >>> new balance = " + this.getBalance());
+        try {
+            this.debit(sum);
+        } catch (AccountException accountException) {
+            accountException.printStackTrace();
+        }
+        return this;
+    }
+
+    public void transfert(Account recipient) {
+        int sumTransfert = BankUtils.doTransfert();
+        try {
+            this.transfer(recipient, sumTransfert);
+            logger.info(" OK >>> " + this.getAccountNumber() + " transfert  " + sumTransfert + " to " + recipient.getAccountNumber());
+            logger.info(" NEW BALANCE >>> " + this.getAccountNumber() + "  =  " + this.getBalance() + " |  " + recipient.getAccountNumber() + " = " + recipient.getBalance());
+        } catch (AccountException accountException) {
+            accountException.printStackTrace();
+        }
+
+    }
 }

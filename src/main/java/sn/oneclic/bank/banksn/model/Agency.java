@@ -13,18 +13,19 @@ import java.util.List;
 public class Agency {
 
     private static int id;
-    private String address;
     private int phone;
+    private String address;
     private Bank bank;
+
     private List<Manager> managerList = new ArrayList<>();  // we can can find lot of Manager in one agency
 
     //protected pour imposer la creation de l'agence by class Bank
     protected Agency(String address, int phone, Bank bank) throws BankException, AgencyException {
         verifyIfNull(bank, address);
         id++;
+        this.bank = bank;
         this.address = address;
         this.phone = phone;
-        this.bank = bank;
     }
 
     private void verifyIfNull(Bank bank, String address) throws BankException, AgencyException {
