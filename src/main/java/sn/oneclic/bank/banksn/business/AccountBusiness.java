@@ -7,17 +7,22 @@ import sn.oneclic.bank.banksn.exceptions.CustomerException;
 import sn.oneclic.bank.banksn.model.Account;
 import sn.oneclic.bank.banksn.model.Bank;
 import sn.oneclic.bank.banksn.model.Customer;
+import sn.oneclic.bank.banksn.model.Manager;
 import sn.oneclic.bank.banksn.services.IAccountService;
 import sn.oneclic.bank.banksn.services.IBankService;
+import sn.oneclic.bank.banksn.services.IManagerService;
 import sn.oneclic.bank.banksn.servicesimpl.AccountServiceImpl;
 import sn.oneclic.bank.banksn.servicesimpl.BankServiceImpl;
+import sn.oneclic.bank.banksn.servicesimpl.ManagerServiceImpl;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 public class AccountBusiness {
     private static Logger logger = Logger.getLogger("Bank");
     private IBankService iBankService = new BankServiceImpl();
     private IAccountService iAccountService = new AccountServiceImpl();
+    private IManagerService iManagerService = new ManagerServiceImpl();
 
     public AccountBusiness() {
 
@@ -33,15 +38,16 @@ public class AccountBusiness {
         Customer customer = null;
 
         try {
-            //customer = this.addCustomer(1, name, address, phone);
             customer = new Customer(1, name, address, phone, identityCardNumber);
             logger.info(" OK >>> customer created -- lets create account for the customer ");
 
             String accountNumber = BankUtils.doOperation(" Give account number ");
             Account account = new Account(bank, accountNumber, 10000, customer);
+            List<Manager> listManager = iManagerService.findAllManager(bank);
 
             iBankService.createCustomer(bank, customer);
             iAccountService.createAccount(bank, account, customer);
+            iManagerService.affectManagerToAccount(listManager.get(0), account);
 
             logger.info(" OK >>> Customer  = " + customer.getName() + " | Account Number = " + bank.getAccountList().get(0).getAccountNumber()
                     + " | Manager = " + bank.getManagerList().get(0).getName() + " | solde = " + bank.getAccountList().get(0).getBalance());

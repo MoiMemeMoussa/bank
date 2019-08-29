@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import sn.oneclic.bank.banksn.exceptions.*;
 import sn.oneclic.bank.banksn.model.*;
 import sn.oneclic.bank.banksn.services.IBankService;
+import sn.oneclic.bank.banksn.services.IManagerService;
 import sn.oneclic.bank.banksn.servicesimpl.BankServiceImpl;
+import sn.oneclic.bank.banksn.servicesimpl.ManagerServiceImpl;
 
 class ManagerTest {
 
@@ -17,6 +19,7 @@ class ManagerTest {
     private Account account = null;
 
     private IBankService bankService = new BankServiceImpl();
+    private IManagerService managerService = new ManagerServiceImpl();
 
 
     @BeforeEach
@@ -38,7 +41,7 @@ class ManagerTest {
     void createManager() {
         try {
             Manager manager = new Manager("Souleymane DIOP", 775902010, bank, agency);
-            bankService.createManager(bank, manager);
+            managerService.create(bank, manager);
         } catch (BankException | ManagerException exception) {
             exception.printStackTrace();
         }
