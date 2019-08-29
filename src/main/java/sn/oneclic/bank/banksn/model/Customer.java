@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @Setter
 public class Customer {
 
-    private static final int IDENTITY_CARD_NUMBER_CHARACTER = 13;
+    private static final int IDENTITY_CARD_NUMBER_CHARACTER = 6;
     private int id;
     private String name;
     private String address;

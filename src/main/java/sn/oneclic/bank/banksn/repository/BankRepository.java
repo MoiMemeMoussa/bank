@@ -1,6 +1,9 @@
 package sn.oneclic.bank.banksn.repository;
 
-import sn.oneclic.bank.banksn.model.*;
+import sn.oneclic.bank.banksn.model.Agency;
+import sn.oneclic.bank.banksn.model.Bank;
+import sn.oneclic.bank.banksn.model.Customer;
+import sn.oneclic.bank.banksn.model.Manager;
 
 public class BankRepository {
 
@@ -12,7 +15,6 @@ public class BankRepository {
 
     public Manager saveManager(Bank bank, Manager manager) {
         bank.getManagerList().add(manager);
-        //manager.getAccountList().add(account);
         return manager;
     }
 
@@ -21,24 +23,5 @@ public class BankRepository {
         return customer;
     }
 
-    public void createAccount(Bank bank, Account account, Customer customer) {
-        bank.getAccountList().add(account);
-        customer.getAccountList().add(account);
-    }
 
-    public Account credit(Account account, int sum) {
-        account.setBalance(account.getBalance() + sum);
-        return account;
-    }
-
-    public Account debit(Account account, int sum) {
-        account.setBalance(account.getBalance() - sum);
-        return account;
-    }
-
-    public Account transfer(Account sender, Account recipient, int sum) {
-        this.debit(sender, sum);
-        recipient.setBalance(recipient.getBalance() + sum);
-        return sender;
-    }
 }

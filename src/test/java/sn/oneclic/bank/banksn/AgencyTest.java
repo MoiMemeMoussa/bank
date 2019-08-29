@@ -3,11 +3,11 @@ package sn.oneclic.bank.banksn;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sn.oneclic.bank.banksn.business.BankBusiness;
 import sn.oneclic.bank.banksn.exceptions.AgencyException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.model.Agency;
 import sn.oneclic.bank.banksn.model.Bank;
-import sn.oneclic.bank.banksn.services.BankService;
 
 
 class AgencyTest {
@@ -15,7 +15,7 @@ class AgencyTest {
     private Agency firstAgency = null;
     private Agency secondAgency = null;
     private Bank bank = null;
-    private BankService bankService = new BankService();
+    private BankBusiness bankService = new BankBusiness();
 
     @BeforeEach
     void setup() {

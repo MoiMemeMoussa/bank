@@ -11,13 +11,15 @@ import sn.oneclic.bank.banksn.model.Account;
 import sn.oneclic.bank.banksn.model.Agency;
 import sn.oneclic.bank.banksn.model.Bank;
 import sn.oneclic.bank.banksn.model.Customer;
+import sn.oneclic.bank.banksn.services.IAccountService;
 import sn.oneclic.bank.banksn.services.IBankService;
+import sn.oneclic.bank.banksn.servicesimpl.AccountServiceImpl;
 import sn.oneclic.bank.banksn.servicesimpl.BankServiceImpl;
 
 class AccountTest {
+
     private Bank bank = null;
     private Agency agency = null;
-    private IBankService bankService = new BankServiceImpl();
 
     private Customer firstCustomer;
     private Customer secondCustomer;
@@ -25,6 +27,8 @@ class AccountTest {
     private Account sender;
     private Account recipient;
 
+    private IBankService bankService = new BankServiceImpl();
+    private IAccountService accountService = new AccountServiceImpl();
 
     @BeforeEach
     void setup() {
@@ -50,20 +54,17 @@ class AccountTest {
 
     @Test
     void creditAccount() {
-
-
         bankService.createCustomer(bank, firstCustomer);
         bankService.createCustomer(bank, secondCustomer);
 
         try {
-            bankService.createAccount(bank, sender, firstCustomer);
-            bankService.createAccount(bank, recipient, secondCustomer);
+            accountService.createAccount(bank, sender, firstCustomer);
+            accountService.createAccount(bank, recipient, secondCustomer);
         } catch (AccountException exception) {
             exception.printStackTrace();
         }
-
-        bankService.creditAccount(sender, 13000);
-        bankService.creditAccount(recipient, 3000);
+        accountService.creditAccount(sender, 13000);
+        accountService.creditAccount(recipient, 3000);
 
         Assertions.assertEquals(25000, bank.getAccountList().get(0).getBalance());
         Assertions.assertEquals(20000, bank.getAccountList().get(1).getBalance());
@@ -71,14 +72,12 @@ class AccountTest {
 
     @Test
     void debitAccount() {
-
-
         try {
-            bankService.createAccount(bank, sender, firstCustomer);
-            bankService.createAccount(bank, recipient, secondCustomer);
+            accountService.createAccount(bank, sender, firstCustomer);
+            accountService.createAccount(bank, recipient, secondCustomer);
 
-            bankService.debitAccount(bank.getAccountList().get(0), 8000);
-            bankService.debitAccount(bank.getAccountList().get(1), 2000);
+            accountService.debitAccount(bank.getAccountList().get(0), 8000);
+            accountService.debitAccount(bank.getAccountList().get(1), 2000);
 
         } catch (AccountException exception) {
             exception.printStackTrace();
@@ -96,9 +95,9 @@ class AccountTest {
         bankService.createCustomer(bank, secondCustomer);
 
         try {
-            bankService.createAccount(bank, sender, firstCustomer);
-            bankService.createAccount(bank, recipient, secondCustomer);
-            bankService.transfer(sender, recipient, 8000);
+            accountService.createAccount(bank, sender, firstCustomer);
+            accountService.createAccount(bank, recipient, secondCustomer);
+            accountService.transfer(sender, recipient, 8000);
         } catch (AccountException accountException) {
             accountException.printStackTrace();
         }
@@ -111,14 +110,14 @@ class AccountTest {
     @Test
     void test_exception_when_debit_sum_less_than_balance() {
 
-        Assertions.assertThrows(AccountException.class, () -> bankService.debitAccount(sender, 25000));
+        Assertions.assertThrows(AccountException.class, () -> accountService.debitAccount(sender, 25000));
 
     }
 
     @Test
     void test_exception_when_transfer_sum_more_than_balance() {
 
-        Assertions.assertThrows(AccountException.class, () -> bankService.transfer(sender, recipient, 58000));
+        Assertions.assertThrows(AccountException.class, () -> accountService.transfer(sender, recipient, 58000));
 
     }
 
