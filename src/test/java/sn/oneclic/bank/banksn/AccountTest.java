@@ -39,7 +39,6 @@ class AccountTest {
             sender = new Account(bank, "010285010285010285010285", 12000, firstCustomer);
             recipient = new Account(bank, "180381180381180381180381", 17000, secondCustomer);
 
-
             bankService.createCustomer(bank, firstCustomer);
             bankService.createCustomer(bank, secondCustomer);
 
