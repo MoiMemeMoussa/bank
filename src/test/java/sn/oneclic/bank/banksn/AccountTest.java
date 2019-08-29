@@ -8,117 +8,118 @@ import sn.oneclic.bank.banksn.exceptions.AgencyException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.exceptions.CustomerException;
 import sn.oneclic.bank.banksn.model.Account;
+import sn.oneclic.bank.banksn.model.Agency;
 import sn.oneclic.bank.banksn.model.Bank;
+import sn.oneclic.bank.banksn.model.Customer;
+import sn.oneclic.bank.banksn.services.IBankService;
+import sn.oneclic.bank.banksn.servicesimpl.BankServiceImpl;
 
 class AccountTest {
     private Bank bank = null;
+    private Agency agency = null;
+    private IBankService bankService = new BankServiceImpl();
+
+    private Customer firstCustomer;
+    private Customer secondCustomer;
+
+    private Account sender;
+    private Account recipient;
+
 
     @BeforeEach
     void setup() {
         try {
             bank = new Bank("BIS");
-            bank.addAgency("Pikine", 335669686);
-        } catch (BankException | AgencyException exception) {
+            agency = new Agency("Pikine", 336552545, bank);
+            bank.getAgencyList().add(agency);
+
+            firstCustomer = new Customer(1, "Yamli Diop ", "Dakar", 774025240, "1667198400225");
+            secondCustomer = new Customer(2, "Dame SEYE", "Colmar", 774409453, "1667198100633");
+
+            sender = new Account(bank, "010285010285010285010285", 12000, firstCustomer);
+            recipient = new Account(bank, "180381180381180381180381", 17000, secondCustomer);
+
+
+            bankService.createCustomer(bank, firstCustomer);
+            bankService.createCustomer(bank, secondCustomer);
+
+        } catch (BankException | AgencyException | CustomerException | AccountException exception) {
             exception.printStackTrace();
         }
-    }
 
+    }
 
     @Test
     void creditAccount() {
 
+
+        bankService.createCustomer(bank, firstCustomer);
+        bankService.createCustomer(bank, secondCustomer);
+
         try {
-            bank.addCustomer(1, "Assane FALL", "Mbour", 774556585);
-            bank.addCustomer(2, "TAFA FALL", "NDIASSANE", 774169685);
-        } catch (CustomerException customerException) {
-            customerException.printStackTrace();
+            bankService.createAccount(bank, sender, firstCustomer);
+            bankService.createAccount(bank, recipient, secondCustomer);
+        } catch (AccountException exception) {
+            exception.printStackTrace();
         }
 
-        bank.affectAccountToCustomer(bank.getCustomerList().get(0), "010285", 7500);
-        bank.affectAccountToCustomer(bank.getCustomerList().get(1), "102589", 18000);
+        bankService.creditAccount(sender, 13000);
+        bankService.creditAccount(recipient, 3000);
 
-        bank.getAccountList().get(0).credit(3500);
-        bank.getAccountList().get(1).credit(2000);
-
-        Assertions.assertEquals(11000, bank.getAccountList().get(0).getBalance());
+        Assertions.assertEquals(25000, bank.getAccountList().get(0).getBalance());
         Assertions.assertEquals(20000, bank.getAccountList().get(1).getBalance());
     }
 
     @Test
     void debitAccount() {
 
-        try {
-            bank.addCustomer(1, "Papa Demba SEMBENE", " Bargny", 776998959);
-            bank.addCustomer(2, "Rokhaya CISSE", "PARCELLES", 765412141);
-        } catch (CustomerException customerException) {
-            customerException.printStackTrace();
-        }
-
-        bank.affectAccountToCustomer(bank.getCustomerList().get(0), "01051985", 1200);
-        bank.affectAccountToCustomer(bank.getCustomerList().get(1), "025082014", 4000);
 
         try {
-            bank.getAccountList().get(0).debit(600);
-            bank.getAccountList().get(1).debit(2000);
-        } catch (AccountException accountException) {
-            accountException.printStackTrace();
+            bankService.createAccount(bank, sender, firstCustomer);
+            bankService.createAccount(bank, recipient, secondCustomer);
+
+            bankService.debitAccount(bank.getAccountList().get(0), 8000);
+            bankService.debitAccount(bank.getAccountList().get(1), 2000);
+
+        } catch (AccountException exception) {
+            exception.printStackTrace();
         }
 
-        Assertions.assertEquals(600, bank.getAccountList().get(0).getBalance());
-        Assertions.assertEquals(2000, bank.getAccountList().get(1).getBalance());
+        Assertions.assertEquals(4000, bank.getAccountList().get(0).getBalance());
+        Assertions.assertEquals(15000, bank.getAccountList().get(1).getBalance());
 
     }
 
     @Test
     void transferAccountToAccount() {
-        try {
-            bank.addCustomer(1, "Claude Bento", " Montpellier", 605527749);
-            bank.addCustomer(2, "Rahim Nouraly", "Occitanie", 741525669);
-        } catch (CustomerException customerException) {
-            customerException.printStackTrace();
-        }
 
-        bank.affectAccountToCustomer(bank.getCustomerList().get(0), "01051985", 1200);
-        bank.affectAccountToCustomer(bank.getCustomerList().get(1), "025082014", 15000);
-        Account sender = bank.getAccountList().get(0);
-        Account recipient = bank.getAccountList().get(1);
+        bankService.createCustomer(bank, firstCustomer);
+        bankService.createCustomer(bank, secondCustomer);
+
         try {
-            sender.transfer(recipient, 1200);
+            bankService.createAccount(bank, sender, firstCustomer);
+            bankService.createAccount(bank, recipient, secondCustomer);
+            bankService.transfer(sender, recipient, 8000);
         } catch (AccountException accountException) {
             accountException.printStackTrace();
         }
-        Assertions.assertEquals(0, sender.getBalance());
-        Assertions.assertEquals(16200, recipient.getBalance());
+
+        Assertions.assertEquals(4000, sender.getBalance());
+        Assertions.assertEquals(25000, recipient.getBalance());
 
     }
 
     @Test
     void test_exception_when_debit_sum_less_than_balance() {
-        try {
-            bank.addCustomer(1, "Claude Bento", " Montpellier", 605527749);
-            bank.addCustomer(2, "Rahim Nouraly", "Occitanie", 741525669);
-        } catch (CustomerException customerException) {
-            customerException.printStackTrace();
-        }
-        bank.affectAccountToCustomer(bank.getCustomerList().get(0), "01051985", 1000);
-        Assertions.assertThrows(AccountException.class, () -> bank.getAccountList().get(0).debit(2500));
+
+        Assertions.assertThrows(AccountException.class, () -> bankService.debitAccount(sender, 25000));
 
     }
 
     @Test
-    void test_exception_when_transfer_sum_less_than_balance() {
-        try {
-            bank.addCustomer(1, "Claude Bento", " Montpellier", 605527749);
-            bank.addCustomer(2, "Rahim Nouraly", "Occitanie", 741525669);
-        } catch (CustomerException customerException) {
-            customerException.printStackTrace();
-        }
+    void test_exception_when_transfer_sum_more_than_balance() {
 
-        bank.affectAccountToCustomer(bank.getCustomerList().get(0), "01051985", 1200);
-        bank.affectAccountToCustomer(bank.getCustomerList().get(1), "025082014", 15000);
-        Account sender = bank.getAccountList().get(0);
-        Account recipient = bank.getAccountList().get(1);
-        Assertions.assertThrows(AccountException.class, () -> sender.transfer(recipient, 14000));
+        Assertions.assertThrows(AccountException.class, () -> bankService.transfer(sender, recipient, 58000));
 
     }
 

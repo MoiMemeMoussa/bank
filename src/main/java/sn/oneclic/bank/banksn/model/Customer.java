@@ -1,6 +1,7 @@
 package sn.oneclic.bank.banksn.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import sn.oneclic.bank.banksn.exceptions.CustomerException;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 
 @Slf4j
 @Getter
+@Setter
 public class Customer {
 
     private static final int IDENTITY_CARD_NUMBER_CHARACTER = 13;
@@ -20,7 +22,7 @@ public class Customer {
     private Bank bank;
     private ArrayList<Account> accountList = new ArrayList<>();
 
-    Customer(int id, String name, String address, @NotNull int phone, String identityCard)
+    public Customer(int id, String name, String address, @NotNull int phone, String identityCard)
             throws CustomerException {
         verifyIfNull(name, address, identityCard);
         this.id = id;

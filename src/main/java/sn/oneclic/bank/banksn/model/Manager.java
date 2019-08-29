@@ -1,6 +1,7 @@
 package sn.oneclic.bank.banksn.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.exceptions.ManagerException;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Slf4j
 @Getter
+@Setter
 public class Manager {
 
     private static int id;

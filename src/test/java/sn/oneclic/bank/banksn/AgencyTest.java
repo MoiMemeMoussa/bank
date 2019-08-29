@@ -5,36 +5,40 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sn.oneclic.bank.banksn.exceptions.AgencyException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
+import sn.oneclic.bank.banksn.model.Agency;
 import sn.oneclic.bank.banksn.model.Bank;
+import sn.oneclic.bank.banksn.services.BankService;
 
 
 class AgencyTest {
 
+    private Agency firstAgency = null;
+    private Agency secondAgency = null;
     private Bank bank = null;
+    private BankService bankService = new BankService();
 
     @BeforeEach
     void setup() {
         try {
-            bank = new Bank("BIS");
-        } catch (BankException exception) {
-            exception.printStackTrace();
+            bank = new Bank("SGBS");
+            firstAgency = new Agency("Dakar", 336332353, bank);
+            secondAgency = new Agency("Ouakam", 336748474, bank);
+
+        } catch (AgencyException | BankException agencyException) {
+            agencyException.printStackTrace();
         }
     }
 
     @Test
     void createAgency() {
         System.out.println("bank = " + bank);
-        try {
-            bank.addAgency("Pikine", 335669686);
-            bank.addAgency("Ouakam", 336547788);
-        } catch (AgencyException | BankException agencyException) {
-            agencyException.printStackTrace();
-        }
+        bank.getAgencyList().add(firstAgency);
+        bank.getAgencyList().add(secondAgency);
         Assertions.assertEquals(2, bank.getAgencyList().size());
     }
 
     @Test
     void test_exception_when_creating_agency_with_null_address() {
-        Assertions.assertThrows(AgencyException.class, () -> bank.addAgency(null, 336998978));
+        Assertions.assertThrows(AgencyException.class, () -> new Agency(null, 774115141, bank));
     }
 }

@@ -1,6 +1,7 @@
 package sn.oneclic.bank.banksn.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import sn.oneclic.bank.banksn.exceptions.AgencyException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Slf4j
 @Getter
+@Setter
 public class Agency {
 
     private static int id;
@@ -19,8 +21,7 @@ public class Agency {
 
     private List<Manager> managerList = new ArrayList<>();  // we can can find lot of Manager in one agency
 
-    //protected pour imposer la creation de l'agence by class Bank
-    protected Agency(String address, int phone, Bank bank) throws BankException, AgencyException {
+    public Agency(String address, int phone, Bank bank) throws BankException, AgencyException {
         verifyIfNull(bank, address);
         id++;
         this.bank = bank;
