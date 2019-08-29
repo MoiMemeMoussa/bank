@@ -24,7 +24,7 @@ class CustomerTest {
         try {
             bank = new Bank("BIS");
             agency = new Agency("Pikine", 336552545, bank);
-            customer = new Customer(1, "Moussa", "Pikine", 774402141, "1667198400225");
+            customer = new Customer(1, "Moussa", "Pikine", 774402141, "166719");
 
         } catch (BankException | AgencyException | CustomerException bankExcpetion) {
             bankExcpetion.printStackTrace();

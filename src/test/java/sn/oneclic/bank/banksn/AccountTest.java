@@ -21,8 +21,8 @@ class AccountTest {
     private Bank bank = null;
     private Agency agency = null;
 
-    private Customer firstCustomer;
-    private Customer secondCustomer;
+    private Customer firstCustomer = null;
+    private Customer secondCustomer = null;
 
     private Account sender;
     private Account recipient;
@@ -37,11 +37,11 @@ class AccountTest {
             agency = new Agency("Pikine", 336552545, bank);
             bank.getAgencyList().add(agency);
 
-            firstCustomer = new Customer(1, "Yamli Diop ", "Dakar", 774025240, "1667198400225");
-            secondCustomer = new Customer(2, "Dame SEYE", "Colmar", 774409453, "1667198100633");
+            firstCustomer = new Customer(1, "Yamli Diop ", "Dakar", 774025240, "180381");
+            secondCustomer = new Customer(2, "Dame SEYE", "Colmar", 774409453, "120384");
 
-            sender = new Account(bank, "010285010285010285010285", 12000, firstCustomer);
-            recipient = new Account(bank, "180381180381180381180381", 17000, secondCustomer);
+            sender = new Account(bank, "240285", 12000, firstCustomer);
+            recipient = new Account(bank, "120390", 17000, secondCustomer);
 
             bankService.createCustomer(bank, firstCustomer);
             bankService.createCustomer(bank, secondCustomer);

@@ -37,7 +37,7 @@ public class Customer {
         if (identityCard == null) {
             throw new CustomerException(" Customer Null => cannot create customer withour identity number !!");
         } else if (identityCard.length() != IDENTITY_CARD_NUMBER_CHARACTER) {
-            throw new CustomerException(" Customer Format => identity number must have 13 caracters");
+            throw new CustomerException(" Customer Format => identity number must have " + IDENTITY_CARD_NUMBER_CHARACTER + " caracters");
         } else if (address == null) {
             throw new CustomerException(" Customer Null => customer must have address");
 

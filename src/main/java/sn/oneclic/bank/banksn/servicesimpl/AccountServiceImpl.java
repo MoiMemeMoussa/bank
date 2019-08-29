@@ -16,8 +16,6 @@ public class AccountServiceImpl implements IAccountService {
             throw new AccountException(" account is defined with a bank !!! ");
         if (customer == null)
             throw new AccountException(" account cannot exist without customer !!! ");
-
-
         accountRepository.createAccount(bank, account, customer);
     }
 
