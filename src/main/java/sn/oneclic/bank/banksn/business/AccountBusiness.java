@@ -58,14 +58,12 @@ public class AccountBusiness {
         return customer;
     }
 
-
     public Account creditAccount(Account account) {
         int sum = Integer.parseInt(BankUtils.doOperation("Enter sum to credit "));
         account = iAccountService.creditAccount(account, sum);
         logger.info(" OK >>> Account credited " + sum + "  >>> new balance = " + account.getBalance());
         return account;
     }
-
 
     public Account debitAccount(Account account) throws AccountException {
         int sum = Integer.parseInt(BankUtils.doOperation("Enter sum to debit "));
@@ -77,6 +75,7 @@ public class AccountBusiness {
         logger.info(" OK >>> debit of " + sum + "  on " + account.getAccountNumber() + " |  new balance = " + account.getBalance());
         return account;
     }
+
 
     public Account transfer(Account sender, Account recipient, int sum) throws AccountException {
         if (sum > sender.getBalance())
