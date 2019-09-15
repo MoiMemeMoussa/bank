@@ -1,5 +1,6 @@
 package sn.oneclic.bank.banksn.business;
 
+import lombok.extern.slf4j.Slf4j;
 import sn.oneclic.bank.banksn.exceptions.AccountException;
 import sn.oneclic.bank.banksn.exceptions.AgencyException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
@@ -8,10 +9,8 @@ import sn.oneclic.bank.banksn.model.Bank;
 import sn.oneclic.bank.banksn.services.IBankService;
 import sn.oneclic.bank.banksn.servicesimpl.BankServiceImpl;
 
-import java.util.logging.Logger;
-
+@Slf4j
 public class BankBusiness {
-    private static Logger logger = Logger.getLogger("Bank");
     private IBankService iBankService = new BankServiceImpl();
 
     public BankBusiness() {
@@ -25,10 +24,10 @@ public class BankBusiness {
                     new Bank("SGBS"));
 
             iBankService.createAgency(bank, agency);
-            logger.info(" OK >>> Agency created for bank " + bank.getName() + '\n');
+            log.info(" OK >>> Agency created for bank " + bank.getName() + '\n');
         } catch (BankException | AgencyException | AccountException exception) {
-            logger.severe(" <<<<   KO !!! Une erreur est survenue >>>>> \t");
-            logger.severe(exception.getMessage());
+            log.error(" <<<<   KO !!! Une erreur est survenue >>>>> \t");
+            log.error(exception.getMessage());
         }
         return agency;
     }

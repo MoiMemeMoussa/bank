@@ -1,5 +1,6 @@
 package sn.oneclic.bank.banksn.business;
 
+import lombok.extern.slf4j.Slf4j;
 import sn.oneclic.bank.banksn.exceptions.AccountException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.exceptions.CustomerException;
@@ -16,10 +17,10 @@ import sn.oneclic.bank.banksn.servicesimpl.ManagerServiceImpl;
 import sn.oneclic.bank.banksn.utils.BankUtils;
 
 import java.util.List;
-import java.util.logging.Logger;
 
+@Slf4j
 public class AccountBusiness {
-    private static Logger logger = Logger.getLogger("Bank");
+
     private IBankService iBankService = new BankServiceImpl();
     private IAccountService iAccountService = new AccountServiceImpl();
     private IManagerService iManagerService = new ManagerServiceImpl();
@@ -36,9 +37,8 @@ public class AccountBusiness {
             customer = new Customer(1, "Claude Bento", "Montpellier",
                     "06602335589", "010285");
 
-            logger.info(" OK >>> customer created -- lets create account for the customer ");
+            log.info(" OK >>> customer created -- lets create account for the customer ");
 
-            //String accountNumber = BankUtils.doOperation(" Give account number ");
             Account account = new Account(bank, "CPT001", 10000, customer);
             List<Manager> listManager = iManagerService.findAllManager(bank);
 
@@ -46,7 +46,7 @@ public class AccountBusiness {
             iAccountService.createAccount(bank, account, customer);
             iManagerService.affectManagerToAccount(listManager.get(0), account);
 
-            logger.info(" OK >>> Customer  = " + customer.getName() + " | Account Number = " + bank.getAccountList().get(0).getAccountNumber()
+            log.info(" OK >>> Customer  = " + customer.getName() + " | Account Number = " + bank.getAccountList().get(0).getAccountNumber()
                     + " | Manager = " + bank.getManagerList().get(0).getName() + " | solde = " + bank.getAccountList().get(0).getBalance());
 
         } catch (BankException | CustomerException | AccountException customerException) {
@@ -58,7 +58,7 @@ public class AccountBusiness {
     public Account creditAccount(Account account) {
         int sum = Integer.parseInt(BankUtils.doOperation("Enter sum to credit "));
         account = iAccountService.creditAccount(account, sum);
-        logger.info(" OK >>> Account credited " + sum + "  >>> new balance = " + account.getBalance());
+        log.info(" OK >>> Account credited " + sum + "  >>> new balance = " + account.getBalance());
         return account;
     }
 
@@ -69,7 +69,7 @@ public class AccountBusiness {
         else {
             account = iAccountService.debitAccount(account, sum);
         }
-        logger.info(" OK >>> debit of " + sum + "  on " + account.getAccountNumber() + " |  new balance = " + account.getBalance());
+        log.info(" OK >>> debit of " + sum + "  on " + account.getAccountNumber() + " |  new balance = " + account.getBalance());
         return account;
     }
 
@@ -80,8 +80,8 @@ public class AccountBusiness {
         else {
             sender = iAccountService.transfer(sender, recipient, sum);
         }
-        logger.info(" Transfert OK  >>> : Sender =  " + sender.getAccountNumber() + " , Sum =  " + sum + " , Recipient =  " + recipient.getAccountNumber());
-        logger.info(" New balance >>>  " + sender.getAccountNumber() + " : " + (sender.getBalance()) + " , Recipient =  " + recipient.getAccountNumber() + " : " + (sender.getBalance() + sum));
+        log.info(" Transfert OK  >>> : Sender =  " + sender.getAccountNumber() + " , Sum =  " + sum + " , Recipient =  " + recipient.getAccountNumber());
+        log.info(" New balance >>>  " + sender.getAccountNumber() + " : " + (sender.getBalance()) + " , Recipient =  " + recipient.getAccountNumber() + " : " + (sender.getBalance() + sum));
 
         return sender;
     }

@@ -7,21 +7,18 @@ import sn.oneclic.bank.banksn.exceptions.AccountException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.exceptions.CustomerException;
 
-import java.util.logging.Logger;
-
 
 @Slf4j
 @Getter
 @Setter
 public class Account {
 
-    private static Logger logger = Logger.getLogger("Account");
+    private static final int ACCOUNT_NUMBER_CHARACTER = 6;
     private String accountNumber;
     private int balance;
     private Bank bank;
     private Customer customer;
     private Manager manager; // an account has 1 manager
-    private static final int ACCOUNT_NUMBER_CHARACTER = 6;
 
     public Account() {
 

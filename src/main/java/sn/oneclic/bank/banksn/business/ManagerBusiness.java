@@ -1,5 +1,6 @@
 package sn.oneclic.bank.banksn.business;
 
+import lombok.extern.slf4j.Slf4j;
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.exceptions.ManagerException;
 import sn.oneclic.bank.banksn.model.Agency;
@@ -8,10 +9,8 @@ import sn.oneclic.bank.banksn.model.Manager;
 import sn.oneclic.bank.banksn.services.IManagerService;
 import sn.oneclic.bank.banksn.servicesimpl.ManagerServiceImpl;
 
-import java.util.logging.Logger;
-
+@Slf4j
 public class ManagerBusiness {
-    private static Logger logger = Logger.getLogger("Bank");
 
     private IManagerService iManagerService = new ManagerServiceImpl();
 
@@ -26,11 +25,11 @@ public class ManagerBusiness {
         try {
             manager = new Manager("Saliou FALL", "060555749", bank, agency);
             iManagerService.create(bank, manager);
-            logger.info(" OK >>> Manager created for bank " + bank.getName());
+            log.info(" OK >>> Manager created for bank " + bank.getName());
 
         } catch (BankException | ManagerException exception) {
-            logger.severe(" <<<<   KO !!! error happened >>>>> \t");
-            logger.severe(exception.getMessage());
+            log.error(" <<<<   KO !!! error happened >>>>> \t");
+            log.error(exception.getMessage());
         }
         return manager;
     }
