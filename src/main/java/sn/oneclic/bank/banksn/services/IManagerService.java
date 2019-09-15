@@ -6,6 +6,7 @@ import sn.oneclic.bank.banksn.model.Manager;
 
 import java.util.List;
 
+
 public interface IManagerService {
 
 

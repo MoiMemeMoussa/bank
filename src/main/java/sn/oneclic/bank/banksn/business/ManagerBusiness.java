@@ -1,6 +1,5 @@
 package sn.oneclic.bank.banksn.business;
 
-import sn.oneclic.bank.banksn.BankUtils;
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.exceptions.ManagerException;
 import sn.oneclic.bank.banksn.model.Agency;
@@ -8,11 +7,13 @@ import sn.oneclic.bank.banksn.model.Bank;
 import sn.oneclic.bank.banksn.model.Manager;
 import sn.oneclic.bank.banksn.services.IManagerService;
 import sn.oneclic.bank.banksn.servicesimpl.ManagerServiceImpl;
+import sn.oneclic.bank.banksn.utils.BankUtils;
 
 import java.util.logging.Logger;
 
 public class ManagerBusiness {
     private static Logger logger = Logger.getLogger("Bank");
+
     private IManagerService iManagerService = new ManagerServiceImpl();
 
     public ManagerBusiness() {

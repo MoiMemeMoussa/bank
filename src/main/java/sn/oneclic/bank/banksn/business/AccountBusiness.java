@@ -1,6 +1,5 @@
 package sn.oneclic.bank.banksn.business;
 
-import sn.oneclic.bank.banksn.BankUtils;
 import sn.oneclic.bank.banksn.exceptions.AccountException;
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.exceptions.CustomerException;
@@ -14,6 +13,7 @@ import sn.oneclic.bank.banksn.services.IManagerService;
 import sn.oneclic.bank.banksn.servicesimpl.AccountServiceImpl;
 import sn.oneclic.bank.banksn.servicesimpl.BankServiceImpl;
 import sn.oneclic.bank.banksn.servicesimpl.ManagerServiceImpl;
+import sn.oneclic.bank.banksn.utils.BankUtils;
 
 import java.util.List;
 import java.util.logging.Logger;

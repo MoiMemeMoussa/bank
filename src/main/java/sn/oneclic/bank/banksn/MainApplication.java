@@ -1,6 +1,7 @@
 package sn.oneclic.bank.banksn;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
 import sn.oneclic.bank.banksn.business.AccountBusiness;
 import sn.oneclic.bank.banksn.business.BankBusiness;
 import sn.oneclic.bank.banksn.business.ManagerBusiness;
@@ -10,8 +11,10 @@ import sn.oneclic.bank.banksn.exceptions.CustomerException;
 import sn.oneclic.bank.banksn.model.Account;
 import sn.oneclic.bank.banksn.model.Bank;
 import sn.oneclic.bank.banksn.model.Customer;
+import sn.oneclic.bank.banksn.utils.BankUtils;
 
 @SpringBootApplication
+@Component
 public class MainApplication {
 
     public static void main(String[] args) {
@@ -45,5 +48,6 @@ public class MainApplication {
             exception.printStackTrace();
         }
     }
+
 
 }

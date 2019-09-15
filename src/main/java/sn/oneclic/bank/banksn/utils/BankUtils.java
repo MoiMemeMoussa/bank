@@ -1,4 +1,4 @@
-package sn.oneclic.bank.banksn;
+package sn.oneclic.bank.banksn.utils;
 
 import sn.oneclic.bank.banksn.exceptions.BankException;
 import sn.oneclic.bank.banksn.model.Bank;
@@ -27,7 +27,7 @@ public class BankUtils {
 
     }
 
-    public static String readLine() {
+    private static String readLine() {
         Scanner scanner = new Scanner(System.in);
         return scanner.next();
     }
@@ -36,7 +36,7 @@ public class BankUtils {
         String bankName = doOperation("1- Enter tha name of your bank");
         Bank bank = null;
         try {
-            bank = new Bank(bankName);
+            bank = new Bank("SGSBS");
             logger.info("  OK >>> bank " + bankName + " created ");
         } catch (BankException bankException) {
             logger.severe(" <<< KO !!! Une erreur est survenue >>>>> \t");
