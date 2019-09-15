@@ -37,8 +37,10 @@ class AccountTest {
             agency = new Agency("Pikine", "336552545", bank);
             bank.getAgencyList().add(agency);
 
-            firstCustomer = new Customer(1, "Yamli Diop ", "Dakar", 774025240, "180381");
-            secondCustomer = new Customer(2, "Dame SEYE", "Colmar", 774409453, "120384");
+            firstCustomer = new Customer(1, "Yamli Diop ", "Dakar",
+                    "07705527749", "180381");
+            secondCustomer = new Customer(2, "Dame SEYE", "Colmar",
+                    "07755528899", "120384");
 
             sender = new Account(bank, "240285", 12000, firstCustomer);
             recipient = new Account(bank, "120390", 17000, secondCustomer);

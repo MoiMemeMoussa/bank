@@ -29,9 +29,10 @@ class ManagerTest {
             agency = new Agency("Pikine", "336552545", bank);
             bankService.createAgency(bank, agency);
 
-            manager = new Manager("Fatima", 774405986, bank, bank.getAgencyList().get(0));
+            manager = new Manager("Fatima", "06602527749", bank, bank.getAgencyList().get(0));
 
-            customer = new Customer(1, "Moussa", "Pikine", 774402141, "252628");
+            customer = new Customer(1, "Moussa", "Pikine",
+                    "06603253369", "252628");
             account = new Account(bank, "010285", 12500, customer);
 
         } catch (BankException | AgencyException | CustomerException | ManagerException | AccountException exception) {
@@ -42,7 +43,7 @@ class ManagerTest {
     @Test
     void createManager() {
         try {
-            Manager manager = new Manager("Souleymane DIOP", 775902010, bank, agency);
+            Manager manager = new Manager("Souleymane DIOP", "06605547788", bank, agency);
             managerService.create(bank, manager);
         } catch (BankException | ManagerException exception) {
             exception.printStackTrace();

@@ -33,11 +33,10 @@ public class BankUtils {
     }
 
     public static Bank createBank() {
-        String bankName = doOperation("1- Enter tha name of your bank");
         Bank bank = null;
         try {
             bank = new Bank("SGSBS");
-            logger.info("  OK >>> bank " + bankName + " created ");
+            logger.info("  OK >>> bank " + bank.getName() + " created ");
         } catch (BankException bankException) {
             logger.severe(" <<< KO !!! Une erreur est survenue >>>>> \t");
             logger.severe(bankException.getMessage());

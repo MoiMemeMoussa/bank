@@ -17,12 +17,12 @@ public class Customer {
     private int id;
     private String name;
     private String address;
-    private int phone;
+    private String phone;
     private String identityCard;
     private Bank bank;
     private ArrayList<Account> accountList = new ArrayList<>();
 
-    public Customer(int id, String name, String address, @NotNull int phone, String identityCard)
+    public Customer(int id, String name, String address, @NotNull String phone, String identityCard)
             throws CustomerException {
         verifyIfNull(name, address, identityCard);
         this.id = id;

@@ -30,19 +30,16 @@ public class AccountBusiness {
 
     public Customer createCustomerAndAccount(Bank bank) {
 
-        String name = BankUtils.doOperation(" Give name  of the customer ");
-        String address = BankUtils.doOperation(" Give address  of customer");
-        String identityCardNumber = BankUtils.doOperation(" Give identity number ");
-        int phone = Integer.parseInt(BankUtils.doOperation(" Give phone number of customer"));
-
         Customer customer = null;
 
         try {
-            customer = new Customer(1, name, address, phone, identityCardNumber);
+            customer = new Customer(1, "Claude Bento", "Montpellier",
+                    "06602335589", "010285");
+
             logger.info(" OK >>> customer created -- lets create account for the customer ");
 
-            String accountNumber = BankUtils.doOperation(" Give account number ");
-            Account account = new Account(bank, accountNumber, 10000, customer);
+            //String accountNumber = BankUtils.doOperation(" Give account number ");
+            Account account = new Account(bank, "CPT001", 10000, customer);
             List<Manager> listManager = iManagerService.findAllManager(bank);
 
             iBankService.createCustomer(bank, customer);

@@ -7,7 +7,6 @@ import sn.oneclic.bank.banksn.model.Bank;
 import sn.oneclic.bank.banksn.model.Manager;
 import sn.oneclic.bank.banksn.services.IManagerService;
 import sn.oneclic.bank.banksn.servicesimpl.ManagerServiceImpl;
-import sn.oneclic.bank.banksn.utils.BankUtils;
 
 import java.util.logging.Logger;
 
@@ -21,12 +20,11 @@ public class ManagerBusiness {
     }
 
     public Manager createManager(Bank bank) {
-        String name = BankUtils.doOperation(" Give name  of the manager ");
-        int phone = Integer.parseInt(BankUtils.doOperation(" Give phone number of manager"));
+
         Agency agency = bank.getAgencyList().get(0);
         Manager manager = null;
         try {
-            manager = new Manager(name, phone, bank, agency);
+            manager = new Manager("Saliou FALL", "060555749", bank, agency);
             iManagerService.create(bank, manager);
             logger.info(" OK >>> Manager created for bank " + bank.getName());
 
