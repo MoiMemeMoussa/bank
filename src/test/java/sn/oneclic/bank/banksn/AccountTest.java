@@ -34,7 +34,7 @@ class AccountTest {
     void setup() {
         try {
             bank = new Bank("BIS");
-            agency = new Agency("Pikine", 336552545, bank);
+            agency = new Agency("Pikine", "336552545", bank);
             bank.getAgencyList().add(agency);
 
             firstCustomer = new Customer(1, "Yamli Diop ", "Dakar", 774025240, "180381");

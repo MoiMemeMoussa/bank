@@ -20,7 +20,7 @@ class BankTest {
     void setup() {
         try {
             bank = new Bank("BIS");
-            agency = new Agency("Pikine", 336552545, bank);
+            agency = new Agency("Pikine", "336552545", bank);
             bankService.createAgency(bank, agency);
         } catch (BankException | AccountException | AgencyException exception) {
             exception.printStackTrace();

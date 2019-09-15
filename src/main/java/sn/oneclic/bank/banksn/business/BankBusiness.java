@@ -7,7 +7,6 @@ import sn.oneclic.bank.banksn.model.Agency;
 import sn.oneclic.bank.banksn.model.Bank;
 import sn.oneclic.bank.banksn.services.IBankService;
 import sn.oneclic.bank.banksn.servicesimpl.BankServiceImpl;
-import sn.oneclic.bank.banksn.utils.BankUtils;
 
 import java.util.logging.Logger;
 
@@ -20,11 +19,11 @@ public class BankBusiness {
     }
 
     public Agency createAgency(Bank bank) {
-        String address = BankUtils.doOperation(" Give address of agency ");
-        int phone = Integer.parseInt(BankUtils.doOperation(" Give phone number of agency"));
         Agency agency = null;
         try {
-            agency = new Agency(address, phone, bank);
+            agency = new Agency("Montpellier Comedie Place", "0605527749",
+                    new Bank("SGBS"));
+
             iBankService.createAgency(bank, agency);
             logger.info(" OK >>> Agency created for bank " + bank.getName() + '\n');
         } catch (BankException | AgencyException | AccountException exception) {

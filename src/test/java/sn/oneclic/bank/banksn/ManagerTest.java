@@ -26,9 +26,11 @@ class ManagerTest {
     void setup() {
         try {
             bank = new Bank("BIS");
-            agency = new Agency("Pikine", 336552545, bank);
+            agency = new Agency("Pikine", "336552545", bank);
             bankService.createAgency(bank, agency);
+
             manager = new Manager("Fatima", 774405986, bank, bank.getAgencyList().get(0));
+
             customer = new Customer(1, "Moussa", "Pikine", 774402141, "252628");
             account = new Account(bank, "010285", 12500, customer);
 

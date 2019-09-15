@@ -23,7 +23,7 @@ class CustomerTest {
     void setup() {
         try {
             bank = new Bank("BIS");
-            agency = new Agency("Pikine", 336552545, bank);
+            agency = new Agency("Pikine", "336552545", bank);
             customer = new Customer(1, "Moussa", "Pikine", 774402141, "166719");
 
         } catch (BankException | AgencyException | CustomerException bankExcpetion) {

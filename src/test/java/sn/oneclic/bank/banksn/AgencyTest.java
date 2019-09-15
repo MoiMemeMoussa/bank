@@ -21,8 +21,8 @@ class AgencyTest {
     void setup() {
         try {
             bank = new Bank("SGBS");
-            firstAgency = new Agency("Dakar", 336332353, bank);
-            secondAgency = new Agency("Ouakam", 336748474, bank);
+            firstAgency = new Agency("Dakar", "336332353", bank);
+            secondAgency = new Agency("Ouakam", "336748474", bank);
 
         } catch (AgencyException | BankException agencyException) {
             agencyException.printStackTrace();
@@ -39,6 +39,6 @@ class AgencyTest {
 
     @Test
     void test_exception_when_creating_agency_with_null_address() {
-        Assertions.assertThrows(AgencyException.class, () -> new Agency(null, 774115141, bank));
+        Assertions.assertThrows(AgencyException.class, () -> new Agency(null, "774115141", bank));
     }
 }

@@ -15,13 +15,13 @@ import java.util.List;
 public class Agency {
 
     private static int id;
-    private int phone;
+    private String phone;
     private String address;
     private Bank bank;
 
     private List<Manager> managerList = new ArrayList<>();  // we can can find lot of Manager in one agency
 
-    public Agency(String address, int phone, Bank bank) throws BankException, AgencyException {
+    public Agency(String address, String phone, Bank bank) throws BankException, AgencyException {
         verifyIfNull(bank, address);
         id++;
         this.bank = bank;
