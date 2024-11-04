@@ -1,5 +1,8 @@
 Projet de simulation des opérations sur un compte bancaire.
-Les opérations sont: 
+Il utilise: 
+  - Java 17
+  - Spring boot 3
+Les opérations sur les comptes bancaires sont les suivants: 
 - crediter un compte
 - débiter un compte
 - transferer de l'argent d'un compte vers un autre
