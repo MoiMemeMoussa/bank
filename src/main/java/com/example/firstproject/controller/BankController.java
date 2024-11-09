@@ -1,6 +1,7 @@
 package com.example.firstproject.controller;
 
 
+import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
@@ -51,7 +52,7 @@ public class BankController {
 
     @GetMapping("/comptes")
     public ResponseEntity<List<CompteDto>> getComptes() {
-        List<CompteDto> listeComptes = bankService.getListeComptes();
+        List<CompteDto> listeComptes = bankService.obtenirTousLesComptes();
         if (CollectionUtils.isEmpty(listeComptes)) {
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
         }
@@ -62,5 +63,11 @@ public class BankController {
     public ResponseEntity transferer(@RequestBody TransfertCompteDto transfertCompteDto) {
         bankService.tranferer(transfertCompteDto.getNumeroCompteExpediteur(), transfertCompteDto.getNumeroCompteDestinataire(), transfertCompteDto.getMontantTransfert());
         return new ResponseEntity<>("Transfert effectué avec succès", HttpStatus.OK);
+    }
+
+    @GetMapping("/releves/{numeroCompte}")
+    public ResponseEntity<CompteEntity> obtenirReleveCompte(@PathVariable String numeroCompte) {
+        CompteEntity reponse = bankService.trouverCompteParNumero(numeroCompte);
+        return new ResponseEntity<>(reponse, HttpStatus.OK);
     }
 }

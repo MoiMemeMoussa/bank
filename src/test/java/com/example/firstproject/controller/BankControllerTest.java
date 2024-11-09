@@ -1,8 +1,12 @@
 package com.example.firstproject.controller;
 
+import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
+import com.example.firstproject.models.TransfertCompteDto;
 import com.example.firstproject.services.BankService;
+import com.example.firstproject.utils.ResourceTestUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +17,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.firstproject.utils.ResourceTestUtils.getCompte;
@@ -104,18 +109,51 @@ class BankControllerTest {
         compte2.setSolde(5_000.0);
         compte3.setSolde(15_000.0);
 
-        Mockito.when(bankService.getListeComptes()).thenReturn(Arrays.asList(compte1, compte2,compte3));
+        Mockito.when(bankService.obtenirTousLesComptes()).thenReturn(Arrays.asList(compte1, compte2, compte3));
         ResponseEntity<List<CompteDto>> responseEntity = bankController.getComptes();
 
         assertNotNull(responseEntity);
         assertNotNull(responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
+        assertNotNull(responseEntity.getBody().get(0));
+        assertNotNull(responseEntity.getBody().get(0).getSolde());
+        assertNotNull(responseEntity.getBody().get(1).getSolde());
+        assertNotNull(responseEntity.getBody().get(2).getSolde());
 
         assertEquals(3, responseEntity.getBody().size());
 
-        assertEquals(2_000.0, responseEntity.getBody().get(0).getSolde());
-        assertEquals(5_000.0, responseEntity.getBody().get(1).getSolde());
-        assertEquals(15_000.0, responseEntity.getBody().get(2).getSolde());
+        assertEquals(compte1.getSolde(), responseEntity.getBody().get(0).getSolde());
+        assertEquals(compte2.getSolde(), responseEntity.getBody().get(1).getSolde());
+        assertEquals(compte3.getSolde(), responseEntity.getBody().get(2).getSolde());
+    }
+
+    @Test
+    @DisplayName("Test: afficher tous les comptes retourne vide")
+    void afficherTousLesComptesRetourneVide() {
+        Mockito.when(bankService.obtenirTousLesComptes()).thenReturn(Collections.emptyList());
+        Assertions.assertDoesNotThrow(
+                () -> bankController.getComptes());
+
+    }
+
+    @Test
+    @DisplayName("Test: tester obtenir un releve de compte")
+    void obtenirReleveCompteTest() {
+        CompteEntity compteEntity = ResourceTestUtils.getCompteEntity();
+        Mockito.when(bankService.trouverCompteParNumero(Mockito.anyString())).thenReturn(compteEntity);
+        Assertions.assertDoesNotThrow(
+                () -> bankController.obtenirReleveCompte("SN-12031984"));
+    }
+
+    @Test
+    void transfererTest() {
+        Mockito.when(bankService.trouverCompteParNumero(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        TransfertCompteDto transfertCompteDto = new TransfertCompteDto();
+        transfertCompteDto.setNumeroCompteExpediteur("SN-18031981");
+        transfertCompteDto.setNumeroCompteDestinataire("FR-24021985");
+        transfertCompteDto.setMontantTransfert(15_000.00);
+        Assertions.assertDoesNotThrow(() -> bankController
+                .transferer(transfertCompteDto));
     }
 
     private OperationCompteDto getOperationCompteDto() {

@@ -35,7 +35,7 @@ public class BankExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler({RessourceAlreadyExistException.class, RessourceNotFoundException.class, RetraitImpossibleException.class})
     public Error throwErrorBadRequest(Exception exception) {
-        log.error("Une erreur s'est produite");
+        log.error("Une erreur s'est produite : {}", exception.getMessage());
         final Error error = new Error();
         error.setCode(HttpStatus.BAD_REQUEST.value());
         error.setMessage(exception.getMessage());

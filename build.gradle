@@ -3,6 +3,8 @@ plugins {
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
     id 'jacoco'
+    id("org.sonarqube") version "5.1.0.4882"
+
 }
 
 group = 'com.example'
@@ -14,21 +16,32 @@ java {
     }
 }
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.3.5'
+
+    // utilitaires
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+
+    runtimeOnly 'com.h2database:h2'
+
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
-    // pour gerer les validations: notNull, notEmpty....
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0-M2'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.3.5'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
 }
 
 tasks.named('test') {
@@ -41,5 +54,15 @@ jacocoTestReport {
         xml.required = false
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+sonarqube {
+    properties {
+        property 'sonar.exclusions', "**/com/example/firstproject/exceptions/**",
+                "**/com/example/firstproject/models/**",
+                "**/com/example/firstproject/entities/**",
+                "**/com/example/firstproject/repositories/**",
+                "**/com/example/firstproject/utils/**";
     }
 }
