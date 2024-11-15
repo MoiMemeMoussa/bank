@@ -1,11 +1,14 @@
 package com.example.firstproject.models;
 
+import com.example.firstproject.entities.TypeOperation;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OperationCompteDto {
@@ -17,5 +20,7 @@ public class OperationCompteDto {
     @NotNull(message = "Le champs 'montantOperation' ne peut pas etre null")
     @NotEmpty(message = "Le champs 'montantOperation' ne peut pas etre vide")
     Double montantOperation;
+
+    TypeOperation typeOperation;
 
 }

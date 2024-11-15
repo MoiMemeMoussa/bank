@@ -38,9 +38,7 @@ public class CompteEntity {
     @JsonIgnore
     private LocalDate dateModification;
 
-    @OneToMany(mappedBy = "compte" ,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "compte", cascade = CascadeType.ALL)
     private List<OperationCompteEntity> operations = new ArrayList<>();
-
-
 
 }

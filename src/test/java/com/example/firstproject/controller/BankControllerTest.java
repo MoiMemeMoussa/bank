@@ -1,6 +1,5 @@
 package com.example.firstproject.controller;
 
-import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
@@ -139,15 +138,15 @@ class BankControllerTest {
     @Test
     @DisplayName("Test: tester obtenir un releve de compte")
     void obtenirReleveCompteTest() {
-        CompteEntity compteEntity = ResourceTestUtils.getCompteEntity();
-        Mockito.when(bankServiceImpl.trouverCompteParNumero(Mockito.anyString())).thenReturn(compteEntity);
+        CompteDto compteDto = ResourceTestUtils.getCompte();
+        Mockito.when(bankServiceImpl.obtenirReleveCompte(Mockito.anyString())).thenReturn(compteDto);
         Assertions.assertDoesNotThrow(
                 () -> bankController.obtenirReleveCompte("SN-12031984"));
     }
 
     @Test
     void transfererTest() {
-        Mockito.when(bankServiceImpl.trouverCompteParNumero(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(bankServiceImpl.obtenirReleveCompte(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
         TransfertCompteDto transfertCompteDto = new TransfertCompteDto();
         transfertCompteDto.setNumeroCompteExpediteur("SN-18031981");
         transfertCompteDto.setNumeroCompteDestinataire("FR-24021985");

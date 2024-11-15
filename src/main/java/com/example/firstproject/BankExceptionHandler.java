@@ -24,7 +24,6 @@ public class BankExceptionHandler {
     public Error throwError(final Exception exception) {
 
         log.error("Une erreur de validation s'est produite");
-
         final Error error = new Error();
         error.setCode(HttpStatus.BAD_REQUEST.value());
         String delimiteur = ";";

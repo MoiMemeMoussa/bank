@@ -37,7 +37,6 @@ public class OperationCompteEntity {
     @JsonIgnore
     private LocalDate dateModification;
 
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     private CompteEntity compte;
 }

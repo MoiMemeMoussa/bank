@@ -1,7 +1,6 @@
 package com.example.firstproject.controller;
 
 
-import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
@@ -60,14 +59,14 @@ public class BankController {
     }
 
     @GetMapping("/transferer")
-    public ResponseEntity transferer(@RequestBody TransfertCompteDto transfertCompteDto) {
-        bankServiceImpl.tranferer(transfertCompteDto.getNumeroCompteExpediteur(), transfertCompteDto.getNumeroCompteDestinataire(), transfertCompteDto.getMontantTransfert());
-        return new ResponseEntity<>("Transfert effectué avec succès", HttpStatus.OK);
+    public ResponseEntity<CompteDto> transferer(@RequestBody TransfertCompteDto transfertCompteDto) {
+        CompteDto compteDto = bankServiceImpl.tranferer(transfertCompteDto.getNumeroCompteExpediteur(), transfertCompteDto.getNumeroCompteDestinataire(), transfertCompteDto.getMontantTransfert());
+        return new ResponseEntity<>(compteDto, HttpStatus.OK);
     }
 
     @GetMapping("/releves/{numeroCompte}")
-    public ResponseEntity<CompteEntity> obtenirReleveCompte(@PathVariable String numeroCompte) {
-        CompteEntity reponse = bankServiceImpl.trouverCompteParNumero(numeroCompte);
+    public ResponseEntity<CompteDto> obtenirReleveCompte(@PathVariable String numeroCompte) {
+        CompteDto reponse = bankServiceImpl.obtenirReleveCompte(numeroCompte);
         return new ResponseEntity<>(reponse, HttpStatus.OK);
     }
 }

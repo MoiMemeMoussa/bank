@@ -3,9 +3,7 @@ package com.example.firstproject.utils;
 import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
 import com.example.firstproject.models.CompteDto;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.firstproject.models.OperationCompteDto;
 
 public class ResourceTestUtils {
 
@@ -27,18 +25,17 @@ public class ResourceTestUtils {
         return entity;
     }
 
-    public static OperationCompteEntity getOperation() {
-        OperationCompteEntity operation = new OperationCompteEntity();
-        operation.setDescription("depot initial");
-        operation.setTypeOperation("CREDIT");
-        operation.setMontantOperation(4120.00);
-        return operation;
+    public static OperationCompteEntity getOperationCompteEntity() {
+        OperationCompteEntity operationCompteEntity = new OperationCompteEntity();
+        operationCompteEntity.setMontantOperation(4500.0);
+        operationCompteEntity.setTypeOperation("CREDITER");
+        operationCompteEntity.setMontantOperation(4500.0);
+        return operationCompteEntity;
     }
 
-    public static List<OperationCompteEntity> getListeOperation() {
-        List<OperationCompteEntity> list = new ArrayList<>();
-        OperationCompteEntity operation = getOperation();
-        list.add(operation);
-        return list;
+    public static OperationCompteDto getOperationCompteDto() {
+        OperationCompteDto operationCompteDto = new OperationCompteDto();
+        operationCompteDto.setMontantOperation(4500.0);
+        return operationCompteDto;
     }
 }
