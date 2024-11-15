@@ -18,4 +18,6 @@ public class OperationCompteDto {
     @NotEmpty(message = "Le champs 'montantOperation' ne peut pas etre vide")
     Double montantOperation;
 
+    String typeOperation;
+
 }

@@ -1,5 +1,6 @@
 package com.example.firstproject.services;
 
+import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.exceptions.RessourceAlreadyExistException;
 import com.example.firstproject.exceptions.RessourceNotFoundException;
 import com.example.firstproject.exceptions.RetraitImpossibleException;
@@ -30,21 +31,34 @@ class BankServiceImplTest {
     @Mock
     private CompteRepository compteRepository;
 
+    @Mock
+    EntityDtoMapper mapper;
+
     @BeforeEach
     void setUp() {
-        bankService = new BankServiceImpl(compteRepository);
+        bankService = new BankServiceImpl(compteRepository, mapper);
     }
 
     @Test
     void creerCompteTest() {
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(),Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
+        operationCompteDto.setTypeOperation("CREDITER");
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+
+        Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
+        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
         Assertions.assertNotNull(bankService.creerCompte(getCompte()));
     }
 
     @Test
     void creerCompteQuiExisteDejaRenvoieException() {
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ResourceTestUtils.getCompteEntity()));
+        Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
+        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
         assertThrows(RessourceAlreadyExistException.class,
                 () ->
                         bankService.creerCompte(getCompte()));
@@ -59,12 +73,22 @@ class BankServiceImplTest {
 
     @Test
     void crediterCompteTest() {
-        Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        bankService.creerCompte(getCompte());
-        OperationCompteDto operationCompteDto = new OperationCompteDto();
+
+        OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
+        operationCompteDto.setTypeOperation("CREDITER");
         operationCompteDto.setMontantOperation(5_000.0);
         operationCompteDto.setNumeroCompte(getCompte().getNumeroCompte());
+
+        Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
+        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(),Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+
+        bankService.creerCompte(getCompte());
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ResourceTestUtils.getCompteEntity()));
+
+
         CompteDto reponse = bankService.crediter(operationCompteDto);
         Assertions.assertNotNull(reponse);
     }
@@ -81,11 +105,18 @@ class BankServiceImplTest {
 
     @Test
     void debiterCompteTest() {
-        Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        bankService.creerCompte(getCompte());
-        OperationCompteDto operationCompteDto = new OperationCompteDto();
+        OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
         operationCompteDto.setMontantOperation(3_000.0);
+        operationCompteDto.setTypeOperation("DEBITER");
         operationCompteDto.setNumeroCompte(getCompte().getNumeroCompte());
+
+        Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
+        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(),Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+
+        bankService.creerCompte(getCompte());
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ResourceTestUtils.getCompteEntity()));
         CompteDto reponse = bankService.debiter(operationCompteDto);
@@ -104,13 +135,22 @@ class BankServiceImplTest {
 
     @Test
     void debiterPlusQueLeSoldeDuCompteRenvoieException() {
-        Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        bankService.creerCompte(getCompte());
-        OperationCompteDto operationCompteDto = new OperationCompteDto();
-        operationCompteDto.setMontantOperation(113_000.0);
+
+        OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
+        operationCompteDto.setTypeOperation("DEBITER");
         operationCompteDto.setNumeroCompte(getCompte().getNumeroCompte());
+
+        Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
+        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(),Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+
+        bankService.creerCompte(getCompte());
+
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ResourceTestUtils.getCompteEntity()));
+
         assertThrows(RetraitImpossibleException.class,
                 () ->
                         bankService.debiter(operationCompteDto));
@@ -118,8 +158,18 @@ class BankServiceImplTest {
 
     @Test
     void transfererTest() {
+        OperationCompteDto operationCompteDto = new OperationCompteDto();
+        operationCompteDto.setMontantOperation(113_000.0);
+        operationCompteDto.setTypeOperation("DEBITER");
+        operationCompteDto.setNumeroCompte(getCompte().getNumeroCompte());
+
         Mockito.when(compteRepository.save(Mockito.any()))
                 .thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
+        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(),Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+
         CompteDto compteExpediteur = getCompte();
         compteExpediteur = bankService.creerCompte(compteExpediteur);
         CompteDto compteDestinataire = getCompte();
