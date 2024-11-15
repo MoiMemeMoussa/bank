@@ -4,7 +4,7 @@ import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
-import com.example.firstproject.services.BankService;
+import com.example.firstproject.services.BankServiceImpl;
 import com.example.firstproject.utils.ResourceTestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,17 +30,17 @@ class BankControllerTest {
     private BankController bankController;
 
     @MockBean
-    BankService bankService;
+    BankServiceImpl bankServiceImpl;
 
     @BeforeEach
     void setUp() {
-        bankController = new BankController(bankService);
+        bankController = new BankController(bankServiceImpl);
     }
 
     @Test
     @DisplayName("Test: créer un compte")
     void creerCompteTest() {
-        Mockito.when(bankService.creerCompte(Mockito.any())).thenReturn(getCompte());
+        Mockito.when(bankServiceImpl.creerCompte(Mockito.any())).thenReturn(getCompte());
         ResponseEntity<CompteDto> responseEntity = bankController.creerCompte(getCompte());
 
         assertNotNull(responseEntity);
@@ -63,7 +63,7 @@ class BankControllerTest {
     void crediterCompteDevraitAugmenterLeSolde() {
         CompteDto compte = getCompte();
         compte.setSolde(20_000.00);
-        Mockito.when(bankService.crediter(Mockito.any())).thenReturn(compte);
+        Mockito.when(bankServiceImpl.crediter(Mockito.any())).thenReturn(compte);
         ResponseEntity<CompteDto> responseEntity = bankController.crediter(getOperationCompteDto());
 
         assertNotNull(responseEntity);
@@ -83,7 +83,7 @@ class BankControllerTest {
     void debiterCompteDevraitDiminuerLeSolde() {
         OperationCompteDto compte = getOperationCompteDto();
         compte.setMontantOperation(1_000.00);
-        Mockito.when(bankService.debiter(Mockito.any())).thenReturn(getCompte());
+        Mockito.when(bankServiceImpl.debiter(Mockito.any())).thenReturn(getCompte());
         ResponseEntity<CompteDto> responseEntity = bankController.debiter(compte);
 
         assertNotNull(responseEntity);
@@ -109,7 +109,7 @@ class BankControllerTest {
         compte2.setSolde(5_000.0);
         compte3.setSolde(15_000.0);
 
-        Mockito.when(bankService.obtenirTousLesComptes()).thenReturn(Arrays.asList(compte1, compte2, compte3));
+        Mockito.when(bankServiceImpl.obtenirTousLesComptes()).thenReturn(Arrays.asList(compte1, compte2, compte3));
         ResponseEntity<List<CompteDto>> responseEntity = bankController.getComptes();
 
         assertNotNull(responseEntity);
@@ -130,7 +130,7 @@ class BankControllerTest {
     @Test
     @DisplayName("Test: afficher tous les comptes retourne vide")
     void afficherTousLesComptesRetourneVide() {
-        Mockito.when(bankService.obtenirTousLesComptes()).thenReturn(Collections.emptyList());
+        Mockito.when(bankServiceImpl.obtenirTousLesComptes()).thenReturn(Collections.emptyList());
         Assertions.assertDoesNotThrow(
                 () -> bankController.getComptes());
 
@@ -140,14 +140,14 @@ class BankControllerTest {
     @DisplayName("Test: tester obtenir un releve de compte")
     void obtenirReleveCompteTest() {
         CompteEntity compteEntity = ResourceTestUtils.getCompteEntity();
-        Mockito.when(bankService.trouverCompteParNumero(Mockito.anyString())).thenReturn(compteEntity);
+        Mockito.when(bankServiceImpl.trouverCompteParNumero(Mockito.anyString())).thenReturn(compteEntity);
         Assertions.assertDoesNotThrow(
                 () -> bankController.obtenirReleveCompte("SN-12031984"));
     }
 
     @Test
     void transfererTest() {
-        Mockito.when(bankService.trouverCompteParNumero(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
+        Mockito.when(bankServiceImpl.trouverCompteParNumero(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
         TransfertCompteDto transfertCompteDto = new TransfertCompteDto();
         transfertCompteDto.setNumeroCompteExpediteur("SN-18031981");
         transfertCompteDto.setNumeroCompteDestinataire("FR-24021985");

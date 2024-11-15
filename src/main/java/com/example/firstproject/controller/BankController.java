@@ -5,7 +5,7 @@ import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
-import com.example.firstproject.services.BankService;
+import com.example.firstproject.services.BankServiceImpl;
 import com.example.firstproject.utils.BankConstantes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +26,12 @@ import java.util.List;
 @RestController
 public class BankController {
 
-    private final BankService bankService;
+    private final BankServiceImpl bankServiceImpl;
 
     @PostMapping("/creer")
     public ResponseEntity<CompteDto> creerCompte(@RequestBody @Valid CompteDto compteDto) {
         log.info(" start - creerUnCompte : {}", compteDto);
-        CompteDto resultat = bankService.creerCompte(compteDto);
+        CompteDto resultat = bankServiceImpl.creerCompte(compteDto);
         return new ResponseEntity<>(resultat, HttpStatus.CREATED);
     }
 
@@ -39,20 +39,20 @@ public class BankController {
     @PatchMapping("/crediter")
     public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" start - crediter ");
-        CompteDto resultat = bankService.crediter(operationCompteDto);
+        CompteDto resultat = bankServiceImpl.crediter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
     @PatchMapping("/debiter")
     public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" start - debiter ");
-        CompteDto resultat = bankService.debiter(operationCompteDto);
+        CompteDto resultat = bankServiceImpl.debiter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
     @GetMapping("/comptes")
     public ResponseEntity<List<CompteDto>> getComptes() {
-        List<CompteDto> listeComptes = bankService.obtenirTousLesComptes();
+        List<CompteDto> listeComptes = bankServiceImpl.obtenirTousLesComptes();
         if (CollectionUtils.isEmpty(listeComptes)) {
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
         }
@@ -61,13 +61,13 @@ public class BankController {
 
     @GetMapping("/transferer")
     public ResponseEntity transferer(@RequestBody TransfertCompteDto transfertCompteDto) {
-        bankService.tranferer(transfertCompteDto.getNumeroCompteExpediteur(), transfertCompteDto.getNumeroCompteDestinataire(), transfertCompteDto.getMontantTransfert());
+        bankServiceImpl.tranferer(transfertCompteDto.getNumeroCompteExpediteur(), transfertCompteDto.getNumeroCompteDestinataire(), transfertCompteDto.getMontantTransfert());
         return new ResponseEntity<>("Transfert effectué avec succès", HttpStatus.OK);
     }
 
     @GetMapping("/releves/{numeroCompte}")
     public ResponseEntity<CompteEntity> obtenirReleveCompte(@PathVariable String numeroCompte) {
-        CompteEntity reponse = bankService.trouverCompteParNumero(numeroCompte);
+        CompteEntity reponse = bankServiceImpl.trouverCompteParNumero(numeroCompte);
         return new ResponseEntity<>(reponse, HttpStatus.OK);
     }
 }

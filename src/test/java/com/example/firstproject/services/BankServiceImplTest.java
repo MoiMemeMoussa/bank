@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class BankServiceTest {
+class BankServiceImplTest {
 
     private BankService bankService;
 
@@ -33,7 +32,7 @@ class BankServiceTest {
 
     @BeforeEach
     void setUp() {
-        bankService = new BankService(compteRepository);
+        bankService = new BankServiceImpl(compteRepository);
     }
 
     @Test
@@ -131,8 +130,8 @@ class BankServiceTest {
         compteDestinataire.setSolde(3_000.0);
 
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ResourceTestUtils.getCompteEntity()));
-        CompteDto finalCompteDestinataire = compteDestinataire;
-        CompteDto finalCompteExpediteur = compteExpediteur;
+        final CompteDto finalCompteDestinataire = compteDestinataire;
+        final CompteDto finalCompteExpediteur = compteExpediteur;
         assertDoesNotThrow(
                 () ->
                         bankService.tranferer(finalCompteExpediteur.getNumeroCompte(), finalCompteDestinataire.getNumeroCompte(), 500.0));
