@@ -18,27 +18,40 @@ import java.util.List;
 @Slf4j
 public class BankExceptionHandler {
 
+    private static final String DELIMITEUR = ";";
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Error throwError(final Exception exception) {
-
-        log.error("Une erreur de validation s'est produite");
+        loggerErreur(exception);
         final Error error = new Error();
         error.setCode(HttpStatus.BAD_REQUEST.value());
-        String delimiteur = ";";
-        error.setMessage(exception.getMessage().split(delimiteur)[5]);
+        error.setMessage(exception.getMessage().split(DELIMITEUR)[5]);
         return error;
     }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({RessourceAlreadyExistException.class, RessourceNotFoundException.class, RetraitImpossibleException.class})
+    @ExceptionHandler({RessourceAlreadyExistException.class, RetraitImpossibleException.class})
     public Error throwErrorBadRequest(Exception exception) {
-        log.error("Une erreur s'est produite : {}", exception.getMessage());
+        loggerErreur(exception);
         final Error error = new Error();
         error.setCode(HttpStatus.BAD_REQUEST.value());
         error.setMessage(exception.getMessage());
         return error;
+    }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(RessourceNotFoundException.class)
+    public Error throwErrorNotFound(Exception exception) {
+        loggerErreur(exception);
+        final Error error = new Error();
+        error.setCode(HttpStatus.NOT_FOUND.value());
+        error.setMessage(exception.getMessage());
+        return error;
+    }
+
+    private void loggerErreur(Exception exception) {
+        log.error("Une erreur s'est produite : {}", exception.getMessage());
     }
 
     @Data
@@ -47,6 +60,5 @@ public class BankExceptionHandler {
         private String message;
         private List<String> errors;
     }
-
 }
 

@@ -3,6 +3,7 @@ package com.example.firstproject.services;
 import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
 import com.example.firstproject.entities.TypeOperation;
+import com.example.firstproject.exceptions.IncorrectOperationException;
 import com.example.firstproject.exceptions.RessourceAlreadyExistException;
 import com.example.firstproject.exceptions.RessourceNotFoundException;
 import com.example.firstproject.exceptions.RetraitImpossibleException;
@@ -52,7 +53,6 @@ public class BankServiceImpl implements BankService {
         list.add(operationCompteEntity);
 
         CompteEntity compteEntity = mapper.toCompteEntity(compteDto);
-
         compteEntity.setOperations(list);
         operationCompteEntity.setCompte(compteEntity);
 
@@ -61,57 +61,51 @@ public class BankServiceImpl implements BankService {
         return reponse;
     }
 
-    @Override
-    public CompteDto crediter(OperationCompteDto operationCompteDto) {
-        CompteEntity compteEntityExistant = findCompteByNumero(operationCompteDto.getNumeroCompte());
-        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
-        OperationCompteEntity operationCredit = mapper.toOperationCompteEntity(operationCompteDto, TypeOperation.CREDIT.getValeur());
-        List<OperationCompteEntity> list = new ArrayList<>();
-        list.add(operationCredit);
-        // liaison des entites
-        compteEntityExistant.setOperations(list);
-        operationCredit.setCompte(compteEntityExistant);
-        //Mise a jour du solde
-        compteEntityExistant.setSolde(compteEntityExistant.getSolde() + operationCredit.getMontantOperation());
-        CompteEntity resulatEntity = compteRepository.save(compteEntityExistant);
-        CompteDto reponse = mapper.toCompteDto(compteRepository.save(resulatEntity));
-        reponse.setOperations(null);
-        return reponse;
-    }
-
-    @Override
-    public CompteDto debiter(OperationCompteDto operationCompteDto) {
-        CompteEntity compteEntityExistant = findCompteByNumero(operationCompteDto.getNumeroCompte());
-        if (operationCompteDto.getMontantOperation() > compteEntityExistant.getSolde()) {
-            throw new RetraitImpossibleException(RETRAIT_IMPOSSIBLE);
-        }
-        operationCompteDto.setTypeOperation(TypeOperation.DEBIT);
-        OperationCompteEntity operationRetrait = mapper.toOperationCompteEntity(operationCompteDto, TypeOperation.DEBIT.getValeur());
-
-        List<OperationCompteEntity> list = new ArrayList<>();
-        list.add(operationRetrait);
-
-        compteEntityExistant.setOperations(list);
-
-        operationRetrait.setCompte(compteEntityExistant);
-        compteEntityExistant.setSolde(compteEntityExistant.getSolde() - operationRetrait.getMontantOperation());
-
-        CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntityExistant));
-        reponse.setOperations(null);
-        return reponse;
-    }
-
     @Transactional
     public CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert) {
-        OperationCompteDto operation = new OperationCompteDto();
-        operation.setMontantOperation(montantTransfert);
-        // debiter expediteur
-        operation.setNumeroCompte(numeroCompteExpediteur);
-        CompteDto compteExpediteur = debiter(operation);
-        //crediter destinataire
-        operation.setNumeroCompte(numeroCompteDestinataire);
-        crediter(operation);
-        return compteExpediteur;
+        OperationCompteDto operationCredit = new OperationCompteDto();
+        operationCredit.setMontantOperation(montantTransfert);
+        operationCredit.setNumeroCompte(numeroCompteDestinataire);
+        operationCredit.setTypeOperation(TypeOperation.CREDIT);
+
+        crediterOuDebiter(operationCredit);
+
+        OperationCompteDto operationDebit = new OperationCompteDto();
+        operationDebit.setMontantOperation(montantTransfert);
+        operationDebit.setNumeroCompte(numeroCompteExpediteur);
+        operationDebit.setTypeOperation(TypeOperation.DEBIT);
+
+        return crediterOuDebiter(operationDebit);
+    }
+
+    @Override
+    public CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto) {
+
+        if (operationCompteDto.getMontantOperation() == 0) {
+            throw new IncorrectOperationException("Le montant du transfert doit etre superieur à 0");
+        }
+
+        List<OperationCompteEntity> list = new ArrayList<>();
+        OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto, TypeOperation.CREDIT.getValeur());
+        list.add(operation);
+
+        // liaison des entites
+        CompteEntity compteEntityExistant = findCompteByNumero(operationCompteDto.getNumeroCompte());
+        compteEntityExistant.setOperations(list);
+        operation.setCompte(compteEntityExistant);
+
+        if (operationCompteDto.getTypeOperation().equals(TypeOperation.CREDIT)) {
+            compteEntityExistant.setSolde(compteEntityExistant.getSolde() + operation.getMontantOperation());
+        }
+        if (operationCompteDto.getTypeOperation().equals(TypeOperation.DEBIT)) {
+            if (compteEntityExistant.getSolde() < operationCompteDto.getMontantOperation()) {
+                throw new RetraitImpossibleException("Retrait impossible !");
+            }
+            compteEntityExistant.setSolde(compteEntityExistant.getSolde() - operation.getMontantOperation());
+        }
+        CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntityExistant));
+        reponse.setOperations(null); //dont  send informations about operations
+        return reponse;
     }
 
     public CompteDto obtenirReleveCompte(String numeroCompte) {

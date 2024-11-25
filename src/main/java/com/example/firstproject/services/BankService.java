@@ -11,10 +11,7 @@ public interface BankService {
 
     List<CompteDto> obtenirTousLesComptes();
 
-    CompteDto crediter(OperationCompteDto operationCompteDto);
-
-    CompteDto debiter(OperationCompteDto operationCompteDto);
-
     CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert);
 
+    CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto);
 }

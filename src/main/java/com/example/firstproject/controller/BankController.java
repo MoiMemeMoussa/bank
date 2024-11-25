@@ -1,6 +1,7 @@
 package com.example.firstproject.controller;
 
 
+import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
@@ -38,14 +39,16 @@ public class BankController {
     @PatchMapping("/crediter")
     public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" start - crediter ");
-        CompteDto resultat = bankServiceImpl.crediter(operationCompteDto);
+        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
+        CompteDto resultat = bankServiceImpl.crediterOuDebiter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
     @PatchMapping("/debiter")
     public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" start - debiter ");
-        CompteDto resultat = bankServiceImpl.debiter(operationCompteDto);
+        operationCompteDto.setTypeOperation(TypeOperation.DEBIT);
+        CompteDto resultat = bankServiceImpl.crediterOuDebiter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 

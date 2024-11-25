@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
@@ -62,7 +63,7 @@ class BankControllerTest {
     void crediterCompteDevraitAugmenterLeSolde() {
         CompteDto compte = getCompte();
         compte.setSolde(20_000.00);
-        Mockito.when(bankServiceImpl.crediter(Mockito.any())).thenReturn(compte);
+        Mockito.when(bankServiceImpl.crediterOuDebiter(Mockito.any())).thenReturn(compte);
         ResponseEntity<CompteDto> responseEntity = bankController.crediter(getOperationCompteDto());
 
         assertNotNull(responseEntity);
@@ -82,7 +83,7 @@ class BankControllerTest {
     void debiterCompteDevraitDiminuerLeSolde() {
         OperationCompteDto compte = getOperationCompteDto();
         compte.setMontantOperation(1_000.00);
-        Mockito.when(bankServiceImpl.debiter(Mockito.any())).thenReturn(getCompte());
+        Mockito.when(bankServiceImpl.crediterOuDebiter(Mockito.any())).thenReturn(getCompte());
         ResponseEntity<CompteDto> responseEntity = bankController.debiter(compte);
 
         assertNotNull(responseEntity);
@@ -132,6 +133,9 @@ class BankControllerTest {
         Mockito.when(bankServiceImpl.obtenirTousLesComptes()).thenReturn(Collections.emptyList());
         Assertions.assertDoesNotThrow(
                 () -> bankController.getComptes());
+        ResponseEntity<List<CompteDto>> resultat = bankController.getComptes();
+        Assertions.assertTrue(resultat.getBody().isEmpty());
+        Assertions.assertEquals(HttpStatus.NO_CONTENT, resultat.getStatusCode());
 
     }
 
@@ -142,6 +146,11 @@ class BankControllerTest {
         Mockito.when(bankServiceImpl.obtenirReleveCompte(Mockito.anyString())).thenReturn(compteDto);
         Assertions.assertDoesNotThrow(
                 () -> bankController.obtenirReleveCompte("SN-12031984"));
+        ResponseEntity<CompteDto> responseEntity = bankController.obtenirReleveCompte("SN-12031984");
+        Assertions.assertNotNull(responseEntity);
+        Assertions.assertNotNull(responseEntity.getBody());
+        Assertions.assertNotNull(responseEntity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
@@ -153,6 +162,10 @@ class BankControllerTest {
         transfertCompteDto.setMontantTransfert(15_000.00);
         Assertions.assertDoesNotThrow(() -> bankController
                 .transferer(transfertCompteDto));
+        ResponseEntity<CompteDto> resultat = bankController.transferer(transfertCompteDto);
+        Assertions.assertNotNull(resultat);
+        Assertions.assertNotNull(resultat.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, resultat.getStatusCode());
     }
 
     private OperationCompteDto getOperationCompteDto() {
