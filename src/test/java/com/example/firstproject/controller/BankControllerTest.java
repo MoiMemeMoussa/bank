@@ -1,5 +1,6 @@
 package com.example.firstproject.controller;
 
+import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
@@ -81,10 +82,12 @@ class BankControllerTest {
     @Test
     @DisplayName("Test: débiter un compte")
     void debiterCompteDevraitDiminuerLeSolde() {
-        OperationCompteDto compte = getOperationCompteDto();
-        compte.setMontantOperation(1_000.00);
+        OperationCompteDto operationDebit = getOperationCompteDto();
+        operationDebit.setMontantOperation(1_000.00);
+
         Mockito.when(bankServiceImpl.crediterOuDebiter(Mockito.any())).thenReturn(getCompte());
-        ResponseEntity<CompteDto> responseEntity = bankController.debiter(compte);
+
+        ResponseEntity<CompteDto> responseEntity = bankController.debiter(operationDebit);
 
         assertNotNull(responseEntity);
         assertNotNull(responseEntity.getStatusCode());

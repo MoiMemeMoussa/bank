@@ -17,6 +17,7 @@ public interface EntityDtoMapper {
     @Mapping(target = "operations", ignore = true)
     CompteEntity toCompteEntity(CompteDto compteDto);
 
+    @Mapping(target = "numeroCompte", ignore = true)
     @Mapping(target = "typeOperation", ignore = true)
     @Mapping(target = "montantOperation", source = "solde")
     OperationCompteDto toOperationCompteDto(CompteDto compteDto);

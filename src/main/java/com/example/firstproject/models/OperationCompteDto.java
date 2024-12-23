@@ -21,6 +21,8 @@ public class OperationCompteDto {
     @NotEmpty(message = "Le champs 'montantOperation' ne peut pas etre vide")
     Double montantOperation;
 
+    @NotNull(message = "Le champs 'typeOperation' ne peut pas etre null")
+    @NotEmpty(message = "Le champs 'typeOperation' ne peut pas etre vide")
     TypeOperation typeOperation;
 
 }

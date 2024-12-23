@@ -33,6 +33,8 @@ public class BankServiceImpl implements BankService {
     private static final String OPERATION_DEPOT = "Depot";
     private static final String OPERATION_RETRAIT = "Retrait";
     private static final String DEPOT_INITIAL = "Depot Initial";
+    private static final String SOLDE_INSUFFISANT = "Retrait impossible: Solde insuffisant";
+    private static final String MONTANT_TRANSFERT_INCORRECT = "Le montant du transfert doit etre superieur à 0";
 
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
@@ -55,7 +57,8 @@ public class BankServiceImpl implements BankService {
         compteEntity.getOperations().add(operationCompteEntity);
 
         CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntity));
-        reponse.setOperations(null);
+
+        reponse.setOperations(null); // don t show operations in the result
         return reponse;
     }
 
@@ -80,27 +83,23 @@ public class BankServiceImpl implements BankService {
     public CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto) {
 
         if (operationCompteDto.getMontantOperation() == 0) {
-            throw new IncorrectOperationException("Le montant du transfert doit etre superieur à 0");
+            throw new IncorrectOperationException(MONTANT_TRANSFERT_INCORRECT);
         }
 
-        List<OperationCompteEntity> list = new ArrayList<>();
         OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
-        list.add(operation);
 
         // liaison des entites
         CompteEntity compteEntityExistant = findCompteByNumero(operationCompteDto.getNumeroCompte());
-        compteEntityExistant.setOperations(list);
-        operation.setCompte(compteEntityExistant);
+        compteEntityExistant.getOperations().add(operation);
 
         if (operationCompteDto.getTypeOperation().equals(TypeOperation.CREDIT)) {
-            operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
             compteEntityExistant.setSolde(compteEntityExistant.getSolde() + operation.getMontantOperation());
         }
+
         if (operationCompteDto.getTypeOperation().equals(TypeOperation.DEBIT)) {
             if (compteEntityExistant.getSolde() < operationCompteDto.getMontantOperation()) {
-                throw new RetraitImpossibleException("Retrait impossible !");
+                throw new RetraitImpossibleException(SOLDE_INSUFFISANT);
             }
-            operationCompteDto.setTypeOperation(TypeOperation.DEBIT);
             compteEntityExistant.setSolde(compteEntityExistant.getSolde() - operation.getMontantOperation());
         }
         CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntityExistant));
