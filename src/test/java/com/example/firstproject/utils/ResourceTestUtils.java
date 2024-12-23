@@ -2,6 +2,7 @@ package com.example.firstproject.utils;
 
 import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
+import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 
@@ -28,7 +29,7 @@ public class ResourceTestUtils {
     public static OperationCompteEntity getOperationCompteEntity() {
         OperationCompteEntity operationCompteEntity = new OperationCompteEntity();
         operationCompteEntity.setMontantOperation(4500.0);
-        operationCompteEntity.setTypeOperation("CREDITER");
+        operationCompteEntity.setTypeOperation(String.valueOf(TypeOperation.CREDIT));
         operationCompteEntity.setMontantOperation(4500.0);
         return operationCompteEntity;
     }

@@ -1,5 +1,6 @@
 package com.example.firstproject.services;
 
+import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
 import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.exceptions.RessourceAlreadyExistException;
@@ -17,13 +18,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static com.example.firstproject.utils.ResourceTestUtils.getCompte;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BankServiceImplTest {
@@ -43,16 +45,25 @@ class BankServiceImplTest {
 
     @Test
     void creerCompteTest() {
-        Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
-        Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(), Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
-        OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
-        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
-        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+        CompteEntity compteEntity = ResourceTestUtils.getCompteEntity();
+        OperationCompteEntity operationCompteEntity = ResourceTestUtils.getOperationCompteEntity();
 
+        Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(compteRepository.save(Mockito.any())).thenReturn(compteEntity);
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
+
+        OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
+
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
-        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        Assertions.assertNotNull(bankService.creerCompte(getCompte()));
+        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
+
+        CompteDto reponse = bankService.creerCompte(getCompte());
+
+        Assertions.assertNotNull(reponse);
+        Assertions.assertNull(reponse.getOperations());
+        Assertions.assertEquals(TypeOperation.CREDIT, operationCompteDto.getTypeOperation());
+
     }
 
     @Test
@@ -84,7 +95,7 @@ class BankServiceImplTest {
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(), Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
         Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
 
         bankService.creerCompte(getCompte());
@@ -115,7 +126,7 @@ class BankServiceImplTest {
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(), Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
         Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
 
         bankService.creerCompte(getCompte());
@@ -144,7 +155,7 @@ class BankServiceImplTest {
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(), Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
         Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
 
         bankService.creerCompte(getCompte());
@@ -169,14 +180,16 @@ class BankServiceImplTest {
                 .thenReturn(ResourceTestUtils.getCompteEntity());
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getCompteEntity());
-        Mockito.when(mapper.toOperationCompteEntity(Mockito.any(), Mockito.anyString())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
+        Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(ResourceTestUtils.getOperationCompteEntity());
         Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
 
         CompteDto compteExpediteur = getCompte();
         compteExpediteur = bankService.creerCompte(compteExpediteur);
+
         CompteDto compteDestinataire = getCompte();
         compteDestinataire.setNumeroCompte("FR-010285");
         compteDestinataire = bankService.creerCompte(compteDestinataire);
+
         // Solde avant transfert
         compteExpediteur.setSolde(10_000.0);
         compteDestinataire.setSolde(3_000.0);

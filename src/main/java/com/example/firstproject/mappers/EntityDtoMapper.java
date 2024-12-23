@@ -28,7 +28,6 @@ public interface EntityDtoMapper {
     @Mapping(target = "compte.numeroCompte", source = "operationCompteDto.numeroCompte")
     @Mapping(target = "typeOperation", source = "operationCompteDto.typeOperation")
     @Mapping(target = "description", source = "operationCompteDto.typeOperation")
-    OperationCompteEntity toOperationCompteEntity(OperationCompteDto operationCompteDto, String typeOperation);
-
+    OperationCompteEntity toOperationCompteEntity(OperationCompteDto operationCompteDto);
 
 }
