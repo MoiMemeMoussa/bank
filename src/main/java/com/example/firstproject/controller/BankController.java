@@ -1,6 +1,7 @@
 package com.example.firstproject.controller;
 
 
+import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
@@ -36,15 +37,17 @@ public class BankController {
 
 
     @PatchMapping("/crediter")
-    public ResponseEntity<CompteDto> crediter(@RequestBody @Valid OperationCompteDto operationCompteDto) {
+    public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" start - crediter ");
+        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
         CompteDto resultat = bankServiceImpl.crediterOuDebiter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
     @PatchMapping("/debiter")
-    public ResponseEntity<CompteDto> debiter(@RequestBody @Valid OperationCompteDto operationCompteDto) {
+    public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" start - debiter ");
+        operationCompteDto.setTypeOperation(TypeOperation.DEBIT);
         CompteDto resultat = bankServiceImpl.crediterOuDebiter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
@@ -60,7 +63,7 @@ public class BankController {
     }
 
     @GetMapping("/transferer")
-    public ResponseEntity<CompteDto> transferer(@RequestBody @Valid TransfertCompteDto transfertCompteDto) {
+    public ResponseEntity<CompteDto> transferer(@RequestBody TransfertCompteDto transfertCompteDto) {
         CompteDto compteDto = bankServiceImpl.tranferer(transfertCompteDto.getNumeroCompteExpediteur(), transfertCompteDto.getNumeroCompteDestinataire(), transfertCompteDto.getMontantTransfert());
         return new ResponseEntity<>(compteDto, HttpStatus.OK);
     }

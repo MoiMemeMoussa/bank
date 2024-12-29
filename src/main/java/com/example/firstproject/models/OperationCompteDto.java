@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -24,5 +26,7 @@ public class OperationCompteDto {
     @NotNull(message = "Le champs 'typeOperation' ne peut pas etre null")
     @NotEmpty(message = "Le champs 'typeOperation' ne peut pas etre vide")
     TypeOperation typeOperation;
+
+    LocalDate dateOperation;
 
 }
