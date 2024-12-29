@@ -34,7 +34,7 @@ public class BankServiceImpl implements BankService {
     private static final String OPERATION_RETRAIT = "Retrait";
     private static final String DEPOT_INITIAL = "Depot Initial";
     private static final String SOLDE_INSUFFISANT = "Retrait impossible: Solde insuffisant";
-    private static final String MONTANT_TRANSFERT_INCORRECT = "Le montant du transfert doit etre superieur à 0";
+    private static final String MONTANT_OPERATION_INCORRECT = "Le montant de l'operation doit etre superieur à 0";
 
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
@@ -55,6 +55,7 @@ public class BankServiceImpl implements BankService {
         OperationCompteEntity operationCompteEntity = mapper.toOperationCompteEntity(operationCompteDto);
 
         compteEntity.getOperations().add(operationCompteEntity);
+        operationCompteEntity.setCompte(compteEntity);
 
         CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntity));
 
@@ -83,7 +84,7 @@ public class BankServiceImpl implements BankService {
     public CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto) {
 
         if (operationCompteDto.getMontantOperation() == 0) {
-            throw new IncorrectOperationException(MONTANT_TRANSFERT_INCORRECT);
+            throw new IncorrectOperationException(MONTANT_OPERATION_INCORRECT);
         }
 
         OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
