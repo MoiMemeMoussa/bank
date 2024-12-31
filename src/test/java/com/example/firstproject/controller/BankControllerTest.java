@@ -136,9 +136,10 @@ class BankControllerTest {
         Assertions.assertDoesNotThrow(
                 () -> bankController.getComptes());
         ResponseEntity<List<CompteDto>> resultat = bankController.getComptes();
+        Assertions.assertNotNull(resultat);
+        Assertions.assertNotNull(resultat.getBody());
         Assertions.assertTrue(resultat.getBody().isEmpty());
         Assertions.assertEquals(HttpStatus.NO_CONTENT, resultat.getStatusCode());
-
     }
 
     @Test

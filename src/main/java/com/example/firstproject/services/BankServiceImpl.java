@@ -90,8 +90,8 @@ public class BankServiceImpl implements BankService {
 
         OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
 
-        // liaison des entites
         CompteEntity compteEntityExistant = findCompteByNumero(operationCompteDto.getNumeroCompte());
+
         compteEntityExistant.getOperations().add(operation);
 
         if (operationCompteDto.getTypeOperation().equals(TypeOperation.CREDIT)) {
@@ -106,7 +106,9 @@ public class BankServiceImpl implements BankService {
         }
 
         CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntityExistant));
+
         reponse.setOperations(null); //dont send informations about operations
+
         return reponse;
     }
 
