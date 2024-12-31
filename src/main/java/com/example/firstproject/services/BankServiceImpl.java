@@ -17,7 +17,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,8 @@ public class BankServiceImpl implements BankService {
             throw new RessourceAlreadyExistException(NUMERO_COMPTE_EXISTE_DEJA);
         }
 
-        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto,TypeOperation.CREDIT.getValeur());
+        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto.getNumeroCompte()
+                , TypeOperation.CREDIT.getValeur(), compteDto.getSolde());
 
         CompteEntity compteEntity = mapper.toCompteEntity(compteDto);
         OperationCompteEntity operationCompteEntity = mapper.toOperationCompteEntity(operationCompteDto);
@@ -71,18 +71,12 @@ public class BankServiceImpl implements BankService {
 
     @Transactional
     public CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert) {
-        OperationCompteDto operationCredit = new OperationCompteDto();
-        operationCredit.setMontantOperation(montantTransfert);
-        operationCredit.setNumeroCompte(numeroCompteDestinataire);
-        operationCredit.setTypeOperation(TypeOperation.CREDIT);
+
+        OperationCompteDto operationCredit = mapper.toOperationCompteDto(numeroCompteDestinataire, TypeOperation.CREDIT.getValeur(), montantTransfert);
 
         crediterOuDebiter(operationCredit);
 
-        OperationCompteDto operationDebit = new OperationCompteDto();
-        operationDebit.setMontantOperation(montantTransfert);
-        operationDebit.setNumeroCompte(numeroCompteExpediteur);
-        operationDebit.setTypeOperation(TypeOperation.DEBIT);
-
+        OperationCompteDto operationDebit = mapper.toOperationCompteDto(numeroCompteExpediteur, TypeOperation.DEBIT.getValeur(), montantTransfert);
 
         return crediterOuDebiter(operationDebit);
     }
@@ -110,8 +104,9 @@ public class BankServiceImpl implements BankService {
             }
             compteEntityExistant.setSolde(compteEntityExistant.getSolde() - operation.getMontantOperation());
         }
+
         CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntityExistant));
-        reponse.setOperations(null); //dont  send informations about operations
+        reponse.setOperations(null); //dont send informations about operations
         return reponse;
     }
 

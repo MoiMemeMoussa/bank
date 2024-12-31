@@ -1,6 +1,5 @@
 package com.example.firstproject.controller;
 
-import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
@@ -40,7 +39,7 @@ class BankControllerTest {
 
     @Test
     @DisplayName("Test: créer un compte")
-    void creerCompteTest() {
+    void creerCompte_retourneSucces() {
         Mockito.when(bankServiceImpl.creerCompte(Mockito.any())).thenReturn(getCompte());
         ResponseEntity<CompteDto> responseEntity = bankController.creerCompte(getCompte());
 
@@ -61,7 +60,7 @@ class BankControllerTest {
 
     @Test
     @DisplayName("Test: créditer un compte")
-    void crediterCompteDevraitAugmenterLeSolde() {
+    void crediter_retourneSucces() {
         CompteDto compte = getCompte();
         compte.setSolde(20_000.00);
         Mockito.when(bankServiceImpl.crediterOuDebiter(Mockito.any())).thenReturn(compte);
@@ -81,7 +80,7 @@ class BankControllerTest {
 
     @Test
     @DisplayName("Test: débiter un compte")
-    void debiterCompteDevraitDiminuerLeSolde() {
+    void debiter_retourneSucces() {
         OperationCompteDto operationDebit = getOperationCompteDto();
         operationDebit.setMontantOperation(1_000.00);
 
@@ -102,7 +101,7 @@ class BankControllerTest {
 
     @Test
     @DisplayName("Test: afficher tous les comptes")
-    void afficherTousLesComptes() {
+    void getComptes_retourneSucces() {
 
         CompteDto compte1 = getCompte();
         CompteDto compte2 = getCompte();
@@ -132,7 +131,7 @@ class BankControllerTest {
 
     @Test
     @DisplayName("Test: afficher tous les comptes retourne vide")
-    void afficherTousLesComptesRetourneVide() {
+    void getComptes_retourneListeVide() {
         Mockito.when(bankServiceImpl.obtenirTousLesComptes()).thenReturn(Collections.emptyList());
         Assertions.assertDoesNotThrow(
                 () -> bankController.getComptes());
@@ -144,7 +143,7 @@ class BankControllerTest {
 
     @Test
     @DisplayName("Test: tester obtenir un releve de compte")
-    void obtenirReleveCompteTest() {
+    void obtenirReleveCompte_retourneSucces() {
         CompteDto compteDto = ResourceTestUtils.getCompte();
         Mockito.when(bankServiceImpl.obtenirReleveCompte(Mockito.anyString())).thenReturn(compteDto);
         Assertions.assertDoesNotThrow(
@@ -157,7 +156,7 @@ class BankControllerTest {
     }
 
     @Test
-    void transfererTest() {
+    void transferer_retourneSucces() {
         Mockito.when(bankServiceImpl.obtenirReleveCompte(Mockito.any())).thenReturn(ResourceTestUtils.getCompte());
         TransfertCompteDto transfertCompteDto = new TransfertCompteDto();
         transfertCompteDto.setNumeroCompteExpediteur("SN-18031981");
