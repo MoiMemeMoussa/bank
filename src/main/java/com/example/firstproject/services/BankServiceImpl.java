@@ -11,11 +11,13 @@ import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.repositories.CompteRepository;
+import com.example.firstproject.utils.BankUtils;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,14 +44,18 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public CompteDto creerCompte(CompteDto compteDto) {
+
         Optional<CompteEntity> compteEntityOptional = compteRepository.findById(compteDto.getNumeroCompte());
 
         if (compteEntityOptional.isPresent()) {
             throw new RessourceAlreadyExistException(NUMERO_COMPTE_EXISTE_DEJA);
         }
 
-        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto);
-        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
+        if (!BankUtils.isDouble(compteDto.getSolde().toString())) {
+            throw new RessourceAlreadyExistException(NUMERO_COMPTE_EXISTE_DEJA);
+        }
+
+        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto,TypeOperation.CREDIT.getValeur());
 
         CompteEntity compteEntity = mapper.toCompteEntity(compteDto);
         OperationCompteEntity operationCompteEntity = mapper.toOperationCompteEntity(operationCompteDto);
@@ -76,6 +82,7 @@ public class BankServiceImpl implements BankService {
         operationDebit.setMontantOperation(montantTransfert);
         operationDebit.setNumeroCompte(numeroCompteExpediteur);
         operationDebit.setTypeOperation(TypeOperation.DEBIT);
+
 
         return crediterOuDebiter(operationDebit);
     }

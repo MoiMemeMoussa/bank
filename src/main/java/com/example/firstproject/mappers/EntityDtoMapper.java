@@ -18,9 +18,14 @@ public interface EntityDtoMapper {
     CompteEntity toCompteEntity(CompteDto compteDto);
 
     @Mapping(target = "numeroCompte", ignore = true)
-    @Mapping(target = "typeOperation", ignore = true)
-    @Mapping(target = "montantOperation", source = "solde")
-    OperationCompteDto toOperationCompteDto(CompteDto compteDto);
+    @Mapping(target = "dateOperation", ignore = true)
+    @Mapping(target = "typeOperation", source = "typeOperation")
+    OperationCompteDto toOperationCompteDto(CompteDto compteDto, String typeOperation);
+
+    @Mapping(target = "numeroCompte", source = "numeroCompte")
+    @Mapping(target = "typeOperation", source = "typeOperation")
+    @Mapping(target = "montantOperation", source = "montant")
+    OperationCompteDto toOperationCompteDto(String numeroCompte, String typeOperation, Double montant);
 
 
     @Mapping(target = "dateModification", ignore = true)

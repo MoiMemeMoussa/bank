@@ -56,8 +56,9 @@ class BankServiceImplTest {
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
 
         OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
+        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
 
-        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any(),Mockito.any())).thenReturn(operationCompteDto);
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
 
@@ -100,7 +101,7 @@ class BankServiceImplTest {
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
-        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any(),Mockito.any())).thenReturn(operationCompteDto);
 
         bankService.creerCompte(getCompte());
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(compteEntity));
@@ -130,7 +131,7 @@ class BankServiceImplTest {
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
-        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any(),Mockito.any())).thenReturn(operationCompteDto);
 
         bankService.creerCompte(getCompte());
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(compteEntity);
@@ -169,7 +170,7 @@ class BankServiceImplTest {
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
-        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any(),Mockito.any())).thenReturn(operationCompteDto);
 
         bankService.creerCompte(getCompte());
 
@@ -195,7 +196,7 @@ class BankServiceImplTest {
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
-        Mockito.when(mapper.toOperationCompteDto(Mockito.any())).thenReturn(operationCompteDto);
+        Mockito.when(mapper.toOperationCompteDto(Mockito.any(),Mockito.any())).thenReturn(operationCompteDto);
 
         CompteDto compteExpediteur = getCompte();
         compteExpediteur = bankService.creerCompte(compteExpediteur);
