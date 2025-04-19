@@ -35,7 +35,6 @@ public class BankController {
         return new ResponseEntity<>(resultat, HttpStatus.CREATED);
     }
 
-
     @PatchMapping("/crediter")
     public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" start - crediter ");
