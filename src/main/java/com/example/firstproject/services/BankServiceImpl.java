@@ -11,6 +11,7 @@ import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.repositories.CompteRepository;
+import com.example.firstproject.utils.BankUtils;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,14 +43,19 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public CompteDto creerCompte(CompteDto compteDto) {
+
         Optional<CompteEntity> compteEntityOptional = compteRepository.findById(compteDto.getNumeroCompte());
 
         if (compteEntityOptional.isPresent()) {
             throw new RessourceAlreadyExistException(NUMERO_COMPTE_EXISTE_DEJA);
         }
 
-        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto);
-        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
+        if (!BankUtils.isDouble(compteDto.getSolde().toString())) {
+            throw new RessourceAlreadyExistException(NUMERO_COMPTE_EXISTE_DEJA);
+        }
+
+        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto.getNumeroCompte()
+                , TypeOperation.CREDIT.getValeur(), compteDto.getSolde());
 
         CompteEntity compteEntity = mapper.toCompteEntity(compteDto);
         OperationCompteEntity operationCompteEntity = mapper.toOperationCompteEntity(operationCompteDto);
@@ -65,17 +71,12 @@ public class BankServiceImpl implements BankService {
 
     @Transactional
     public CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert) {
-        OperationCompteDto operationCredit = new OperationCompteDto();
-        operationCredit.setMontantOperation(montantTransfert);
-        operationCredit.setNumeroCompte(numeroCompteDestinataire);
-        operationCredit.setTypeOperation(TypeOperation.CREDIT);
+
+        OperationCompteDto operationCredit = mapper.toOperationCompteDto(numeroCompteDestinataire, TypeOperation.CREDIT.getValeur(), montantTransfert);
 
         crediterOuDebiter(operationCredit);
 
-        OperationCompteDto operationDebit = new OperationCompteDto();
-        operationDebit.setMontantOperation(montantTransfert);
-        operationDebit.setNumeroCompte(numeroCompteExpediteur);
-        operationDebit.setTypeOperation(TypeOperation.DEBIT);
+        OperationCompteDto operationDebit = mapper.toOperationCompteDto(numeroCompteExpediteur, TypeOperation.DEBIT.getValeur(), montantTransfert);
 
         return crediterOuDebiter(operationDebit);
     }
@@ -89,8 +90,8 @@ public class BankServiceImpl implements BankService {
 
         OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
 
-        // liaison des entites
         CompteEntity compteEntityExistant = findCompteByNumero(operationCompteDto.getNumeroCompte());
+
         compteEntityExistant.getOperations().add(operation);
 
         if (operationCompteDto.getTypeOperation().equals(TypeOperation.CREDIT)) {
@@ -103,8 +104,11 @@ public class BankServiceImpl implements BankService {
             }
             compteEntityExistant.setSolde(compteEntityExistant.getSolde() - operation.getMontantOperation());
         }
+
         CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntityExistant));
-        reponse.setOperations(null); //dont  send informations about operations
+
+        reponse.setOperations(null); //dont send informations about operations
+
         return reponse;
     }
 

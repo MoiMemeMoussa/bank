@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface EntityDtoMapper {
 
+    @Mapping(target = "operations.numeroCompte", ignore = true)
     CompteDto toCompteDto(CompteEntity compteEntity);
 
     @Mapping(target = "dateCreation", ignore = true)
@@ -17,11 +18,11 @@ public interface EntityDtoMapper {
     @Mapping(target = "operations", ignore = true)
     CompteEntity toCompteEntity(CompteDto compteDto);
 
-    @Mapping(target = "numeroCompte", ignore = true)
-    @Mapping(target = "typeOperation", ignore = true)
-    @Mapping(target = "montantOperation", source = "solde")
-    OperationCompteDto toOperationCompteDto(CompteDto compteDto);
-
+    @Mapping(target = "dateOperation", ignore = true)
+    @Mapping(target = "numeroCompte", source = "numeroCompte")
+    @Mapping(target = "typeOperation", source = "typeOperation")
+    @Mapping(target = "montantOperation", source = "montantOperation")
+    OperationCompteDto toOperationCompteDto(String numeroCompte, String typeOperation,Double montantOperation);
 
     @Mapping(target = "dateModification", ignore = true)
     @Mapping(target = "idOperation", ignore = true)
