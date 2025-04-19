@@ -17,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Getter
@@ -113,14 +111,6 @@ public class BankServiceImpl implements BankService {
     private CompteEntity findCompteByNumero(String numeroCompte) {
         return compteRepository.findById(numeroCompte)
                 .orElseThrow(() -> new RessourceNotFoundException(NUMERO_COMPTE_EXISTE_PAS));
-    }
-
-    public List<CompteDto> obtenirTousLesComptes() {
-        List<CompteDto> list = new ArrayList<>();
-        compteRepository.findAll()
-                .iterator()
-                .forEachRemaining(compteEntity -> list.add(mapper.toCompteDto(compteEntity)));
-        return list;
     }
 
     public void validerMontantOperation(String montant) {
