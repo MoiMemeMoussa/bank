@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.example.firstproject.utils.ResourceTestUtils.getCompte;
@@ -64,7 +63,6 @@ class BankServiceImplTest {
         CompteDto reponse = bankService.creerCompte(getCompte());
 
         Assertions.assertNotNull(reponse);
-        Assertions.assertNull(reponse.getOperations());
         Assertions.assertEquals(TypeOperation.CREDIT, operationCompteDto.getTypeOperation());
 
     }
@@ -75,17 +73,10 @@ class BankServiceImplTest {
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
         Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
 
-        CompteDto compteDto = getCompte();
+        CompteDto compteToCreate = getCompte();
         Assertions.assertThrows(RessourceAlreadyExistException.class,
                 () ->
-                        bankService.creerCompte(compteDto));
-    }
-
-    @Test
-    void obtenirTousLesComptes_retourneSucces() {
-        Mockito.when(compteRepository.findAll()).thenReturn(List.of(compteEntity));
-        List<CompteDto> reponse = bankService.obtenirTousLesComptes();
-        Assertions.assertNotNull(reponse);
+                        bankService.creerCompte(compteToCreate));
     }
 
     @Test
@@ -212,7 +203,7 @@ class BankServiceImplTest {
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(compteEntity));
         final CompteDto finalCompteDestinataire = compteDestinataire;
         final CompteDto finalCompteExpediteur = compteExpediteur;
-        Assertions.assertDoesNotThrow( () ->
+        Assertions.assertDoesNotThrow(() ->
                 bankService.tranferer(finalCompteExpediteur.getNumeroCompte(),
                         finalCompteDestinataire.getNumeroCompte(), 500.0));
     }

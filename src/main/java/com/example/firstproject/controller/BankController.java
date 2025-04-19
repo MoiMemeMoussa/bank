@@ -12,12 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.List;
 
 @Validated
 @Slf4j
@@ -49,16 +45,6 @@ public class BankController {
         operationCompteDto.setTypeOperation(TypeOperation.DEBIT);
         CompteDto resultat = bankServiceImpl.crediterOuDebiter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
-    }
-
-    @GetMapping("/comptes")
-    public ResponseEntity<List<CompteDto>> getComptes() {
-        log.info(" start - getComptes ");
-        List<CompteDto> listeComptes = bankServiceImpl.obtenirTousLesComptes();
-        if (CollectionUtils.isEmpty(listeComptes)) {
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(listeComptes, HttpStatus.OK);
     }
 
     @GetMapping("/transferer")
