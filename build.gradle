@@ -4,7 +4,6 @@ buildscript {
     }
 }
 
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
@@ -55,7 +54,6 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2'
 
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.6.3"
@@ -84,11 +82,11 @@ jacocoTestReport {
 
 sonarqube {
     properties {
-        property 'sonar.exclusions', "**/com/example/firstproject/exceptions/**",
-                "**/com/example/firstproject/models/**",
-                "**/com/example/firstproject/entities/**",
-                "**/com/example/firstproject/repositories/**",
-                "**/com/example/firstproject/utils/**";
+        property 'sonar.exclusions', "**/com/example/firstproject/exceptions/**" +
+                ",**/com/example/firstproject/models/**" +
+                ",**/com/example/firstproject/entities/**" +
+                ",**/com/example/firstproject/repositories/**" +
+                ",**/com/example/firstproject/utils/**"
     }
 
 }
