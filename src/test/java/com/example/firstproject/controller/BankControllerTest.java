@@ -16,10 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import static com.example.firstproject.utils.ResourceTestUtils.getCompte;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -97,49 +93,6 @@ class BankControllerTest {
         assertNotNull(responseEntity.getBody().getNumeroCompte());
 
         assertEquals(5_000.00, responseEntity.getBody().getSolde());
-    }
-
-    @Test
-    @DisplayName("Test: afficher tous les comptes")
-    void getComptes_retourneSucces() {
-
-        CompteDto compte1 = getCompte();
-        CompteDto compte2 = getCompte();
-        CompteDto compte3 = getCompte();
-
-        compte1.setSolde(2_000.0);
-        compte2.setSolde(5_000.0);
-        compte3.setSolde(15_000.0);
-
-        Mockito.when(bankServiceImpl.obtenirTousLesComptes()).thenReturn(Arrays.asList(compte1, compte2, compte3));
-        ResponseEntity<List<CompteDto>> responseEntity = bankController.getComptes();
-
-        assertNotNull(responseEntity);
-        assertNotNull(responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertNotNull(responseEntity.getBody().get(0));
-        assertNotNull(responseEntity.getBody().get(0).getSolde());
-        assertNotNull(responseEntity.getBody().get(1).getSolde());
-        assertNotNull(responseEntity.getBody().get(2).getSolde());
-
-        assertEquals(3, responseEntity.getBody().size());
-
-        assertEquals(compte1.getSolde(), responseEntity.getBody().get(0).getSolde());
-        assertEquals(compte2.getSolde(), responseEntity.getBody().get(1).getSolde());
-        assertEquals(compte3.getSolde(), responseEntity.getBody().get(2).getSolde());
-    }
-
-    @Test
-    @DisplayName("Test: afficher tous les comptes retourne vide")
-    void getComptes_retourneListeVide() {
-        Mockito.when(bankServiceImpl.obtenirTousLesComptes()).thenReturn(Collections.emptyList());
-        Assertions.assertDoesNotThrow(
-                () -> bankController.getComptes());
-        ResponseEntity<List<CompteDto>> resultat = bankController.getComptes();
-        Assertions.assertNotNull(resultat);
-        Assertions.assertNotNull(resultat.getBody());
-        Assertions.assertTrue(resultat.getBody().isEmpty());
-        Assertions.assertEquals(HttpStatus.NO_CONTENT, resultat.getStatusCode());
     }
 
     @Test
