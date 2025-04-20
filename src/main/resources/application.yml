@@ -12,3 +12,15 @@ spring:
     password: password
 server:
   port: 9090
+
+
+logbook:
+  format: http
+  filter:
+    enabled: true
+  write:
+    level: TRACE                # Set log level to TRACE for detailed logs
+    category: logbook.log      # Define a custom logger category
+  obfuscate:
+    body:
+      - numeroCompte
