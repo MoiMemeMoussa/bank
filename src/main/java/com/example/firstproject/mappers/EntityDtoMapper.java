@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.firstproject.utils.BankConstantes.getDateDuJour;
@@ -19,8 +20,10 @@ public interface EntityDtoMapper {
     CompteDto toCompteDto(CompteEntity compteEntity);
 
     @Mapping(target = "dateCreation", expression = "java(obtenirDate())")
+    @Mapping(target = "operations", expression = "java(obtenirOperations(operationCompteDto))")
     @Mapping(target = "dateModification", ignore = true)
-    CompteEntity toCompteEntity(CompteDto compteDto);
+    @Mapping(target = "numeroCompte", source = "compteDto.numeroCompte")
+    CompteEntity toCompteEntity(CompteDto compteDto, OperationCompteDto operationCompteDto);
 
     @Mapping(target = "dateOperation", expression = "java(obtenirDate())")
     @Mapping(target = "numeroCompte", source = "numeroCompte")
@@ -34,6 +37,13 @@ public interface EntityDtoMapper {
     @Mapping(target = "typeOperation", source = "operationCompteDto.typeOperation")
     @Mapping(target = "description", source = "operationCompteDto.typeOperation")
     OperationCompteEntity toOperationCompteEntity(OperationCompteDto operationCompteDto);
+
+    default List<OperationCompteEntity> obtenirOperations(OperationCompteDto operationCompteDto) {
+        List<OperationCompteEntity> list = new ArrayList<>();
+        OperationCompteEntity operationCompteEntity = toOperationCompteEntity(operationCompteDto);
+        list.add(operationCompteEntity);
+        return list;
+    }
 
     default LocalDate obtenirDate() {
         return getDateDuJour();
