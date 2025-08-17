@@ -14,14 +14,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.firstproject.utils.BankConstantes.*;
-
 @Validated
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping(BankConstantes.URI)
 @RestController
 public class BankController {
+
+    private static final String ENDPOINT_CREER_COMPTE = "/creer";
+    private static final String ENDPOINT_CREDITER_COMPTE = "/crediter";
+    private static final String ENDPOINT_DEBITER_COMPTE = "/debiter";
+    private static final String ENDPOINT_OBTENIR_RELEVE_COMPTE = "/releves/{numeroCompte}";
+    private static final String ENDPOINT_TRANSFERT_COMPTE_A_COMPTE = "/transferer";
 
     private final BankServiceImpl bankServiceImpl;
 
@@ -48,13 +52,13 @@ public class BankController {
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
-    @GetMapping(ENDPOINT_TRANSFERER)
+    @GetMapping(ENDPOINT_TRANSFERT_COMPTE_A_COMPTE)
     public ResponseEntity<CompteDto> transferer(@RequestBody TransfertCompteDto transfertCompteDto) {
         CompteDto compteDto = bankServiceImpl.tranferer(transfertCompteDto.getNumeroCompteExpediteur(), transfertCompteDto.getNumeroCompteDestinataire(), transfertCompteDto.getMontantTransfert());
         return new ResponseEntity<>(compteDto, HttpStatus.OK);
     }
 
-    @GetMapping(ENDPOINT_RELEVE_COMPTE)
+    @GetMapping(ENDPOINT_OBTENIR_RELEVE_COMPTE)
     public ResponseEntity<CompteDto> obtenirReleveCompte(@PathVariable String numeroCompte) {
         CompteDto reponse = bankServiceImpl.obtenirReleveCompte(numeroCompte);
         return new ResponseEntity<>(reponse, HttpStatus.OK);
