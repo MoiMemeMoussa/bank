@@ -3,7 +3,6 @@ package com.example.firstproject.services;
 import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
 import com.example.firstproject.entities.TypeOperation;
-import com.example.firstproject.exceptions.IncorrectOperationException;
 import com.example.firstproject.exceptions.RessourceAlreadyExistException;
 import com.example.firstproject.exceptions.RessourceNotFoundException;
 import com.example.firstproject.exceptions.RetraitImpossibleException;
@@ -11,13 +10,15 @@ import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.repositories.CompteRepository;
+import com.example.firstproject.services.ra.RaValidation;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Slf4j
@@ -25,41 +26,43 @@ import java.util.Optional;
 @Service
 public class BankServiceImpl implements BankService {
 
+    private static final String DEPOT_INITIAL = "Depot Initial";
+
     private static final String NUMERO_COMPTE_EXISTE_DEJA = "Ce compte existe déja";
     private static final String NUMERO_COMPTE_EXISTE_PAS = "Ce compte n'existe pas";
 
     private static final String OPERATION_DEPOT = "Depot";
     private static final String OPERATION_RETRAIT = "Retrait";
-    private static final String DEPOT_INITIAL = "Depot Initial";
 
-    private static final String SOLDE_INSUFFISANT = "Retrait impossible: Solde insuffisant";
-    private static final String MONTANT_OPERATION_INCORRECT = "Le montant de l'operation doit etre superieur à 0";
     private static final String RETRAIT_IMPOSSIBLE = "Retrait impossible: votre solde est inférieure à ce montant";
+    private static final String SOLDE_INSUFFISANT = "Retrait impossible: Solde insuffisant";
 
+    private final RaValidation raValidation;
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
 
     @Override
     public CompteDto creerCompte(CompteDto compteDto) {
 
-        validerMontantOperation(compteDto.getSolde().toString());
+        raValidation.validerMontant(compteDto.getSolde().toString());
 
-        Optional<CompteEntity> compteEntityOptional = compteRepository.findById(compteDto.getNumeroCompte());
+        compteRepository.findById(compteDto.getNumeroCompte())
+                .ifPresent(compteEntity -> {
+                    throw new RessourceAlreadyExistException(NUMERO_COMPTE_EXISTE_DEJA);
+                });
 
-        if (compteEntityOptional.isPresent()) {
-            throw new RessourceAlreadyExistException(NUMERO_COMPTE_EXISTE_DEJA);
-        }
-
-        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto.getNumeroCompte()
-                , TypeOperation.CREDIT.getValeur(), compteDto.getSolde());
-
-        CompteEntity compteEntity = mapper.toCompteEntity(compteDto);
+        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto.getNumeroCompte(), TypeOperation.CREDIT.getValeur(), compteDto.getSolde());
         OperationCompteEntity operationCompteEntity = mapper.toOperationCompteEntity(operationCompteDto);
 
-        compteEntity.getOperations().add(operationCompteEntity);
-        operationCompteEntity.setCompte(compteEntity);
-
+        CompteEntity compteEntity = mapper.toCompteEntity(compteDto);
+        setOperation(compteEntity, operationCompteEntity);
         return mapper.toCompteDto(compteRepository.save(compteEntity));
+    }
+
+    private void setOperation(CompteEntity compteEntity, OperationCompteEntity operationCompteEntity) {
+        List<OperationCompteEntity> list = new ArrayList<>();
+        list.add(operationCompteEntity);
+        compteEntity.setOperations(list);
     }
 
     @Transactional
@@ -77,7 +80,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto) {
 
-        validerMontantOperation(operationCompteDto.getMontantOperation().toString());
+        raValidation.validerMontant(operationCompteDto.getMontantOperation().toString());
 
         OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
 
@@ -87,9 +90,8 @@ public class BankServiceImpl implements BankService {
 
         if (operationCompteDto.getTypeOperation().equals(TypeOperation.CREDIT)) {
             compteEntityExistant.setSolde(compteEntityExistant.getSolde() + operation.getMontantOperation());
-        }
+        } else {
 
-        if (operationCompteDto.getTypeOperation().equals(TypeOperation.DEBIT)) {
             if (compteEntityExistant.getSolde() < operationCompteDto.getMontantOperation()) {
                 throw new RetraitImpossibleException(SOLDE_INSUFFISANT);
             }
@@ -113,17 +115,4 @@ public class BankServiceImpl implements BankService {
                 .orElseThrow(() -> new RessourceNotFoundException(NUMERO_COMPTE_EXISTE_PAS));
     }
 
-    public void validerMontantOperation(String montant) {
-        if (validerMontant(montant) == 0 || validerMontant(montant) < 0) {
-            throw new IncorrectOperationException(MONTANT_OPERATION_INCORRECT);
-        }
-    }
-
-    private double validerMontant(String montant) {
-        try {
-            return Double.parseDouble(montant);
-        } catch (NumberFormatException exception) {
-            throw new IncorrectOperationException(MONTANT_OPERATION_INCORRECT);
-        }
-    }
 }
