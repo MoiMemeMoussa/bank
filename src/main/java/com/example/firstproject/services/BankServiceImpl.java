@@ -17,9 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Slf4j
 @RequiredArgsConstructor
@@ -52,17 +49,10 @@ public class BankServiceImpl implements BankService {
                 });
 
         OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto.getNumeroCompte(), TypeOperation.CREDIT.getValeur(), compteDto.getSolde());
-        OperationCompteEntity operationCompteEntity = mapper.toOperationCompteEntity(operationCompteDto);
 
-        CompteEntity compteEntity = mapper.toCompteEntity(compteDto);
-        setOperation(compteEntity, operationCompteEntity);
+        CompteEntity compteEntity = mapper.toCompteEntity(compteDto, operationCompteDto);
+
         return mapper.toCompteDto(compteRepository.save(compteEntity));
-    }
-
-    private void setOperation(CompteEntity compteEntity, OperationCompteEntity operationCompteEntity) {
-        List<OperationCompteEntity> list = new ArrayList<>();
-        list.add(operationCompteEntity);
-        compteEntity.setOperations(list);
     }
 
     @Transactional

@@ -55,7 +55,7 @@ class BankServiceImplTest {
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
-        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
+        Mockito.when(mapper.toCompteEntity(Mockito.any(), Mockito.any())).thenReturn(compteEntity);
 
         OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
         operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
@@ -71,7 +71,7 @@ class BankServiceImplTest {
     void creerCompte_retourneRessourceAlreadyExistException() {
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(compteEntity));
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
-        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
+        Mockito.when(mapper.toCompteEntity(Mockito.any(), Mockito.any())).thenReturn(compteEntity);
 
         CompteDto compteToCreate = getCompte();
         Assertions.assertThrows(RessourceAlreadyExistException.class,
@@ -89,7 +89,7 @@ class BankServiceImplTest {
 
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
-        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
+        Mockito.when(mapper.toCompteEntity(Mockito.any(), Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
 
         bankService.creerCompte(getCompte());
@@ -118,7 +118,7 @@ class BankServiceImplTest {
 
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
-        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
+        Mockito.when(mapper.toCompteEntity(Mockito.any(), Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
 
         bankService.creerCompte(getCompte());
@@ -156,7 +156,7 @@ class BankServiceImplTest {
 
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
-        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
+        Mockito.when(mapper.toCompteEntity(Mockito.any(), Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
 
         bankService.creerCompte(getCompte());
@@ -171,7 +171,7 @@ class BankServiceImplTest {
                 () -> bankService.crediterOuDebiter(operationCompteDto));
     }
 
-    @Disabled
+    @Disabled (" Je vais revenir sur ce test")
     @Test
     void tranferer_retourneSucces() {
         OperationCompteDto opExpediteur = new OperationCompteDto();
@@ -182,7 +182,7 @@ class BankServiceImplTest {
         Mockito.when(compteRepository.save(Mockito.any()))
                 .thenReturn(compteEntity);
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
-        Mockito.when(mapper.toCompteEntity(Mockito.any())).thenReturn(compteEntity);
+        Mockito.when(mapper.toCompteEntity(Mockito.any(), Mockito.any())).thenReturn(compteEntity);
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
 
         CompteDto compteExpediteur = bankService.creerCompte(getCompte());
