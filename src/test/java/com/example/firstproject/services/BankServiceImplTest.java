@@ -43,7 +43,7 @@ class BankServiceImplTest {
     @BeforeEach
     void setUp() {
         raValidation = new RaValidation();
-        bankService = new BankServiceImpl(raValidation, compteRepository, mapper);
+        bankService = new BankServiceImpl(compteRepository, mapper, raValidation);
         compteDto = ResourceTestUtils.getCompte();
         compteEntity = ResourceTestUtils.getCompteEntity();
         operationCompteEntity = ResourceTestUtils.getOperationCompteEntity();
@@ -122,8 +122,10 @@ class BankServiceImplTest {
         Mockito.when(mapper.toOperationCompteEntity(Mockito.any())).thenReturn(operationCompteEntity);
 
         bankService.creerCompte(getCompte());
+
         Mockito.when(compteRepository.save(Mockito.any())).thenReturn(compteEntity);
         Mockito.when(compteRepository.findById(Mockito.anyString())).thenReturn(Optional.of(compteEntity));
+
         CompteDto response = bankService.crediterOuDebiter(operationCompteDto);
         Assertions.assertNotNull(response);
     }

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class RaValidation {
 
-    private static final String MONTANT_OPERATION_INCORRECT = "Le montant de l'operation doit etre superieur à 0";
     private static final String LE_FORMAT_EST_INCORRECT = "Le montant de l'operation doit etre numerique";
+    private static final String MONTANT_OPERATION_INCORRECT = "Le montant de l'operation doit etre superieur à 0";
 
-    private double validerFormatMontant(String montant) {
+    private double validerMontantEstNumerique(String montant) {
         try {
             return Double.parseDouble(montant);
         } catch (NumberFormatException exception) {
@@ -22,7 +22,7 @@ public class RaValidation {
     }
 
     public void validerMontant(String montant) {
-        double montantValide = validerFormatMontant(montant);
+        double montantValide = validerMontantEstNumerique(montant);
         if (montantValide <= 0) {
             throw new IncorrectMontantException(MONTANT_OPERATION_INCORRECT);
         }

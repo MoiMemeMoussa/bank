@@ -24,74 +24,52 @@ import org.springframework.stereotype.Service;
 public class BankServiceImpl implements BankService {
 
     private static final String DEPOT_INITIAL = "Depot Initial";
-
     private static final String NUMERO_COMPTE_EXISTE_DEJA = "Ce compte existe déja";
     private static final String NUMERO_COMPTE_EXISTE_PAS = "Ce compte n'existe pas";
-
     private static final String OPERATION_DEPOT = "Depot";
     private static final String OPERATION_RETRAIT = "Retrait";
-
     private static final String RETRAIT_IMPOSSIBLE = "Retrait impossible: votre solde est inférieure à ce montant";
     private static final String SOLDE_INSUFFISANT = "Retrait impossible: Solde insuffisant";
 
-    private final RaValidation raValidation;
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
+    private final RaValidation raValidation;
 
     @Override
     public CompteDto creerCompte(CompteDto compteDto) {
-
-        raValidation.validerMontant(compteDto.getSolde().toString());
-
         compteRepository.findById(compteDto.getNumeroCompte())
                 .ifPresent(compteEntity -> {
                     throw new RessourceAlreadyExistException(NUMERO_COMPTE_EXISTE_DEJA);
                 });
-
         OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto.getNumeroCompte(), TypeOperation.CREDIT.getValeur(), compteDto.getSolde());
-
         CompteEntity compteEntity = mapper.toCompteEntity(compteDto, operationCompteDto);
-
         return mapper.toCompteDto(compteRepository.save(compteEntity));
     }
 
     @Transactional
     public CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert) {
-
         OperationCompteDto operationCredit = mapper.toOperationCompteDto(numeroCompteDestinataire, TypeOperation.CREDIT.getValeur(), montantTransfert);
-
         crediterOuDebiter(operationCredit);
-
         OperationCompteDto operationDebit = mapper.toOperationCompteDto(numeroCompteExpediteur, TypeOperation.DEBIT.getValeur(), montantTransfert);
-
         return crediterOuDebiter(operationDebit);
     }
 
     @Override
     public CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto) {
-
         raValidation.validerMontant(operationCompteDto.getMontantOperation().toString());
-
         OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
-
         CompteEntity compteEntityExistant = findCompteByNumero(operationCompteDto.getNumeroCompte());
-
         compteEntityExistant.getOperations().add(operation);
-
         if (operationCompteDto.getTypeOperation().equals(TypeOperation.CREDIT)) {
             compteEntityExistant.setSolde(compteEntityExistant.getSolde() + operation.getMontantOperation());
         } else {
-
             if (compteEntityExistant.getSolde() < operationCompteDto.getMontantOperation()) {
                 throw new RetraitImpossibleException(SOLDE_INSUFFISANT);
             }
             compteEntityExistant.setSolde(compteEntityExistant.getSolde() - operation.getMontantOperation());
         }
-
         CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntityExistant));
-
         reponse.setOperations(null); //dont send informations about operations
-
         return reponse;
     }
 
@@ -104,5 +82,4 @@ public class BankServiceImpl implements BankService {
         return compteRepository.findById(numeroCompte)
                 .orElseThrow(() -> new RessourceNotFoundException(NUMERO_COMPTE_EXISTE_PAS));
     }
-
 }

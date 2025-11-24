@@ -60,6 +60,10 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.6.3"
 
+//    testCompile 'io.cucumber:cucumber-java:7.23.0'
+//    testCompile 'io.cucumber:cucumber-junit:7.23.0'
+    testImplementation 'io.cucumber:cucumber-java:7.23.0'
+
 }
 
 tasks.named('test') {
