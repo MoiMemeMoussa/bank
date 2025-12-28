@@ -1,8 +1,8 @@
 package com.example.firstproject;
 
 
-import com.example.firstproject.exceptions.RessourceAlreadyExistException;
-import com.example.firstproject.exceptions.RessourceNotFoundException;
+import com.example.firstproject.exceptions.RessourceExistanteException;
+import com.example.firstproject.exceptions.RessourceNonTrouveException;
 import com.example.firstproject.exceptions.RetraitImpossibleException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class BankExceptionHandler {
     }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({RessourceAlreadyExistException.class, RetraitImpossibleException.class})
+    @ExceptionHandler({RessourceExistanteException.class, RetraitImpossibleException.class})
     public Error throwErrorBadRequest(Exception exception) {
         loggerErreur(exception);
         final Error error = new Error();
@@ -41,7 +41,7 @@ public class BankExceptionHandler {
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(RessourceNotFoundException.class)
+    @ExceptionHandler(RessourceNonTrouveException.class)
     public Error throwErrorNotFound(Exception exception) {
         loggerErreur(exception);
         final Error error = new Error();

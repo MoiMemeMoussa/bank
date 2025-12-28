@@ -3,8 +3,8 @@ package com.example.firstproject.services;
 import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
 import com.example.firstproject.entities.TypeOperation;
-import com.example.firstproject.exceptions.RessourceAlreadyExistException;
-import com.example.firstproject.exceptions.RessourceNotFoundException;
+import com.example.firstproject.exceptions.RessourceExistanteException;
+import com.example.firstproject.exceptions.RessourceNonTrouveException;
 import com.example.firstproject.exceptions.RetraitImpossibleException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
@@ -39,7 +39,7 @@ public class BankServiceImpl implements BankService {
     public CompteDto creerCompte(CompteDto compteDto) {
         compteRepository.findById(compteDto.getNumeroCompte())
                 .ifPresent(compteEntity -> {
-                    throw new RessourceAlreadyExistException(CE_COMPTE_EXISTE_DEJA);
+                    throw new RessourceExistanteException(CE_COMPTE_EXISTE_DEJA);
                 });
         OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto.getNumeroCompte(), TypeOperation.CREDIT.getValeur(), compteDto.getSolde());
         CompteEntity compteEntity = mapper.toCompteEntity(compteDto, operationCompteDto);
@@ -80,6 +80,6 @@ public class BankServiceImpl implements BankService {
 
     private CompteEntity obtenirDetailsCompte(String numeroCompte) {
         return compteRepository.findById(numeroCompte)
-                .orElseThrow(() -> new RessourceNotFoundException(CE_COMPTE_EXISTE_PAS));
+                .orElseThrow(() -> new RessourceNonTrouveException(CE_COMPTE_EXISTE_PAS));
     }
 }
