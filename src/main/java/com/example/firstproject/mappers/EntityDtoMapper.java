@@ -4,6 +4,7 @@ import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -31,6 +32,10 @@ public interface EntityDtoMapper {
     @Mapping(target = "montantOperation", source = "montantOperation")
     OperationCompteDto toOperationCompteDto(String numeroCompte, String operationCompte, Double montantOperation);
 
+    @AfterMapping
+    default void jeTeste(OperationCompteDto operationCompteDto) {
+        System.out.println("AfterMappign - start : {}"+ operationCompteDto);
+    }
     @Mapping(target = "dateModification", ignore = true)
     @Mapping(target = "idOperation", ignore = true)
     @Mapping(target = "compte.numeroCompte", source = "operationCompteDto.numeroCompte")
@@ -40,8 +45,7 @@ public interface EntityDtoMapper {
 
     default List<OperationCompteEntity> obtenirOperations(OperationCompteDto operationCompteDto) {
         List<OperationCompteEntity> list = new ArrayList<>();
-        OperationCompteEntity operationCompteEntity = toOperationCompteEntity(operationCompteDto);
-        list.add(operationCompteEntity);
+        list.add(toOperationCompteEntity(operationCompteDto));
         return list;
     }
 

@@ -4,8 +4,8 @@ import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
 import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.exceptions.IncorrectMontantException;
-import com.example.firstproject.exceptions.RessourceAlreadyExistException;
-import com.example.firstproject.exceptions.RessourceNotFoundException;
+import com.example.firstproject.exceptions.RessourceExistanteException;
+import com.example.firstproject.exceptions.RessourceNonTrouveException;
 import com.example.firstproject.exceptions.RetraitImpossibleException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
@@ -74,7 +74,7 @@ class BankServiceImplTest {
         Mockito.when(mapper.toCompteEntity(Mockito.any(), Mockito.any())).thenReturn(compteEntity);
 
         CompteDto compteToCreate = getCompte();
-        Assertions.assertThrows(RessourceAlreadyExistException.class,
+        Assertions.assertThrows(RessourceExistanteException.class,
                 () ->
                         bankService.creerCompte(compteToCreate));
     }
@@ -103,7 +103,7 @@ class BankServiceImplTest {
     void crediterOuDebiterRenvoieRessourceNotFoundException() {
         OperationCompteDto operationCompteDto = new OperationCompteDto();
         operationCompteDto.setMontantOperation(23_000.0);
-        Assertions.assertThrows(RessourceNotFoundException.class,
+        Assertions.assertThrows(RessourceNonTrouveException.class,
                 () ->
                         bankService.crediterOuDebiter(operationCompteDto));
     }
@@ -135,7 +135,7 @@ class BankServiceImplTest {
         OperationCompteDto operationCompteDto = new OperationCompteDto();
         operationCompteDto.setMontantOperation(23_000.0);
         operationCompteDto.setNumeroCompte(getCompte().getNumeroCompte());
-        Assertions.assertThrows(RessourceNotFoundException.class,
+        Assertions.assertThrows(RessourceNonTrouveException.class,
                 () ->
                         bankService.crediterOuDebiter(operationCompteDto));
     }
