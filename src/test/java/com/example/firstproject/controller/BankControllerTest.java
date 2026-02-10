@@ -97,12 +97,12 @@ class BankControllerTest {
 
     @Test
     @DisplayName("Test: tester obtenir un releve de compte")
-    void obtenirReleveCompte_retourneSucces() {
+    void releveCompte_retourneSucces() {
         CompteDto compteDto = ResourceTestUtils.getCompte();
         Mockito.when(bankServiceImpl.obtenirReleveCompte(Mockito.anyString())).thenReturn(compteDto);
         Assertions.assertDoesNotThrow(
-                () -> bankController.obtenirReleveCompte("SN-12031984"));
-        ResponseEntity<CompteDto> responseEntity = bankController.obtenirReleveCompte("SN-12031984");
+                () -> bankController.releveCompte("SN-12031984"));
+        ResponseEntity<CompteDto> responseEntity = bankController.releveCompte("SN-12031984");
         Assertions.assertNotNull(responseEntity);
         Assertions.assertNotNull(responseEntity.getBody());
         Assertions.assertNotNull(responseEntity.getStatusCode());

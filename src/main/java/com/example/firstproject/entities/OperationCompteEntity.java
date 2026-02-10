@@ -10,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 
+import static com.example.firstproject.utils.BankConstantes.getDateDuJour;
+
 @Getter
 @Setter
 @Table(name = "operation")
@@ -39,4 +41,11 @@ public class OperationCompteEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private CompteEntity compte;
+
+    @PrePersist
+    public void prePersist() {
+        if (dateOperation == null) {
+            dateOperation = getDateDuJour();
+        }
+    }
 }

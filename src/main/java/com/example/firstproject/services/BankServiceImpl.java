@@ -57,9 +57,11 @@ public class BankServiceImpl implements BankService {
     @Override
     public CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto) {
         raValidation.validerMontant(operationCompteDto.getMontantOperation().toString());
-        OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
         CompteEntity compteEntityExistant = obtenirDetailsCompte(operationCompteDto.getNumeroCompte());
+
+        OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
         compteEntityExistant.getOperations().add(operation);
+
         if (operationCompteDto.getTypeOperation().equals(TypeOperation.CREDIT)) {
             compteEntityExistant.setSolde(compteEntityExistant.getSolde() + operation.getMontantOperation());
         } else {

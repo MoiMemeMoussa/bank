@@ -25,14 +25,14 @@ public class BankController {
     private static final String ENDPOINT_CREDITER_COMPTE = "/crediter";
     private static final String ENDPOINT_DEBITER_COMPTE = "/debiter";
     private static final String ENDPOINT_OBTENIR_RELEVE_COMPTE = "/releves/{numeroCompte}";
-    private static final String ENDPOINT_TRANSFERT_COMPTE_A_COMPTE = "/transferer";
+    private static final String ENDPOINT_TRANSFERT = "/transferer";
 
     private final BankServiceImpl bankService;
 
     @PostMapping(ENDPOINT_CREER_COMPTE)
-    public ResponseEntity<CompteDto> creerCompte(@RequestBody @Valid CompteDto compteDto) {
+    public ResponseEntity<CompteDto> creerCompte(@RequestBody @Valid CompteDto compte) {
         log.info(" start - creation du compte ");
-        CompteDto resultat = bankService.creerCompte(compteDto);
+        CompteDto resultat = bankService.creerCompte(compte);
         return new ResponseEntity<>(resultat, HttpStatus.CREATED);
     }
 
@@ -45,21 +45,21 @@ public class BankController {
     }
 
     @PatchMapping(ENDPOINT_DEBITER_COMPTE)
-    public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompteDto) {
+    public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompte) {
         log.info(" start - debiter ");
-        operationCompteDto.setTypeOperation(TypeOperation.DEBIT);
-        CompteDto resultat = bankService.crediterOuDebiter(operationCompteDto);
+        operationCompte.setTypeOperation(TypeOperation.DEBIT);
+        CompteDto resultat = bankService.crediterOuDebiter(operationCompte);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
-    @GetMapping(ENDPOINT_TRANSFERT_COMPTE_A_COMPTE)
-    public ResponseEntity<CompteDto> transferer(@RequestBody TransfertCompteDto transfertCompteDto) {
-        CompteDto compteDto = bankService.tranferer(transfertCompteDto.getNumeroCompteExpediteur(), transfertCompteDto.getNumeroCompteDestinataire(), transfertCompteDto.getMontantTransfert());
+    @PostMapping(ENDPOINT_TRANSFERT)
+    public ResponseEntity<CompteDto> transferer(@RequestBody TransfertCompteDto transfert) {
+        CompteDto compteDto = bankService.tranferer(transfert.getNumeroCompteExpediteur(), transfert.getNumeroCompteDestinataire(), transfert.getMontantTransfert());
         return new ResponseEntity<>(compteDto, HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_OBTENIR_RELEVE_COMPTE)
-    public ResponseEntity<CompteDto> obtenirReleveCompte(@PathVariable String numeroCompte) {
+    public ResponseEntity<CompteDto> releveCompte(@PathVariable String numeroCompte) {
         CompteDto reponse = bankService.obtenirReleveCompte(numeroCompte);
         return new ResponseEntity<>(reponse, HttpStatus.OK);
     }
