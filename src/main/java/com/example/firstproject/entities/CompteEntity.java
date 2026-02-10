@@ -1,6 +1,7 @@
 package com.example.firstproject.entities;
 
 
+import com.example.firstproject.utils.BankConstantes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,8 +10,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.firstproject.utils.BankConstantes.getDateDuJour;
 
 @Getter
 @Setter
@@ -40,5 +44,12 @@ public class CompteEntity {
 
     @OneToMany(mappedBy = "compte", cascade = CascadeType.ALL)
     private List<OperationCompteEntity> operations = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        if (dateCreation == null) {
+            dateCreation = getDateDuJour();
+        }
+    }
 
 }

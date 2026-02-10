@@ -9,7 +9,7 @@ public enum TypeOperation {
     CREDIT("CREDIT"),
     DEBIT("DEBIT");
 
-    private String valeur;
+    private final String valeur;
 
     TypeOperation(String valeur) {
         this.valeur = valeur;

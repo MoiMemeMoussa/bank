@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 
 import java.util.Optional;
 
@@ -57,13 +58,14 @@ class BankServiceImplTest {
         Mockito.when(mapper.toCompteDto(Mockito.any())).thenReturn(compteDto);
         Mockito.when(mapper.toCompteEntity(Mockito.any(), Mockito.any())).thenReturn(compteEntity);
 
-        OperationCompteDto operationCompteDto = ResourceTestUtils.getOperationCompteDto();
-        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
-
         CompteDto reponse = bankService.creerCompte(getCompte());
 
-        Assertions.assertNotNull(reponse);
-        Assertions.assertEquals(TypeOperation.CREDIT, operationCompteDto.getTypeOperation());
+        Assertions.assertAll(() -> {
+            Assertions.assertNotNull(reponse);
+            Assertions.assertNotNull(reponse.getNumeroCompte());
+            Assertions.assertNotNull(reponse.getOperations());
+            Assertions.assertEquals(getCompte().getNumeroCompte(), reponse.getNumeroCompte());
+        });
 
     }
 

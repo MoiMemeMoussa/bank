@@ -20,22 +20,17 @@ public interface EntityDtoMapper {
     @Mapping(target = "operations.numeroCompte", ignore = true)
     CompteDto toCompteDto(CompteEntity compteEntity);
 
-    @Mapping(target = "dateCreation", expression = "java(obtenirDate())")
     @Mapping(target = "operations", expression = "java(obtenirOperations(operationCompteDto))")
     @Mapping(target = "dateModification", ignore = true)
     @Mapping(target = "numeroCompte", source = "compteDto.numeroCompte")
     CompteEntity toCompteEntity(CompteDto compteDto, OperationCompteDto operationCompteDto);
 
-    @Mapping(target = "dateOperation", expression = "java(obtenirDate())")
+    @Mapping(target = "dateOperation", ignore = true)
     @Mapping(target = "numeroCompte", source = "numeroCompte")
     @Mapping(target = "typeOperation", source = "operationCompte")
     @Mapping(target = "montantOperation", source = "montantOperation")
     OperationCompteDto toOperationCompteDto(String numeroCompte, String operationCompte, Double montantOperation);
 
-    @AfterMapping
-    default void jeTeste(OperationCompteDto operationCompteDto) {
-        System.out.println("AfterMappign - start : {}"+ operationCompteDto);
-    }
     @Mapping(target = "dateModification", ignore = true)
     @Mapping(target = "idOperation", ignore = true)
     @Mapping(target = "compte.numeroCompte", source = "operationCompteDto.numeroCompte")
@@ -47,9 +42,5 @@ public interface EntityDtoMapper {
         List<OperationCompteEntity> list = new ArrayList<>();
         list.add(toOperationCompteEntity(operationCompteDto));
         return list;
-    }
-
-    default LocalDate obtenirDate() {
-        return getDateDuJour();
     }
 }

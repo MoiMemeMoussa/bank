@@ -5,7 +5,7 @@ import java.time.ZoneId;
 
 public class BankConstantes {
 
-    public static final String URI = "clic";
+    public static final String URI = "clic/v1";
     private static final String ZONE_ID_MONTREAL = "America/Montreal";
 
     private BankConstantes() {

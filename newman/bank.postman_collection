@@ -1,0 +1,360 @@
+{
+  "info": {
+    "_postman_id": "406025d2-1b8c-4d62-8c98-21b1ea7093ee",
+    "name": "ma bank",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "5896776",
+    "_collection_link": "https://go.postman.co/collection/5896776-406025d2-1b8c-4d62-8c98-21b1ea7093ee?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1- creer le 1ier compte",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var reponse = pm.response.json();\r",
+              "\r",
+              "pm.test(\"le code http 201 est retourné\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "    pm.collectionVariables.set(\"premierCompte\", reponse.numeroCompte);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstName\": \"Mouhammad\",\r\n    \"lastName\": \"FALL\",\r\n    \"solde\": 3000,\r\n    \"numeroCompte\": \"MF-23112012\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/creer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "creer"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "1.1 - Créditer 1ier compte",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"numeroCompte\": \"{{premierCompte}}\",\r\n    \"montantOperation\": 7000,\r\n    \"typeOperation\": \"CREDIT\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/crediter",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "crediter"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "1.2 - debiter  1ier compte",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n        \"numeroCompte\": \"{{premierCompte}}\",\r\n        \"montantOperation\": 2500,\r\n        \"typeOperation\": \"DEBIT\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/debiter",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "debiter"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "1.3 - relevé 1ier compte",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/releves/{{premierCompte}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "releves",
+            "{{premierCompte}}"
+          ],
+          "query": [
+            {
+              "key": "numeroCompte",
+              "value": "AF-01012024",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2- Creer le second compte",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var reponse = pm.response.json();\r",
+              "\r",
+              "pm.test(\"le code http 201 est retourné\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "    pm.collectionVariables.set(\"secondCompte\", reponse.numeroCompte);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstName\": \"Papa Ibrahima\",\r\n    \"lastName\": \"FALL\",\r\n    \"solde\": \"500\",\r\n    \"numeroCompte\": \"AF-07112016\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/creer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "creer"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2.1 Créditer 2nd compte",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"numeroCompte\": \"{{secondCompte}}\",\r\n    \"montantOperation\": 7000,\r\n    \"typeOperation\": \"CREDIT\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/crediter",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "crediter"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2.2 - débiter 2nd compte",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n        \"numeroCompte\": \"{{secondCompte}}\",\r\n        \"montantOperation\": 2500,\r\n        \"typeOperation\": \"DEBIT\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/debiter",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "debiter"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2.3 - relevé 2nd compte",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/releves/{{secondCompte}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "releves",
+            "{{secondCompte}}"
+          ],
+          "query": [
+            {
+              "key": "numeroCompte",
+              "value": "AF-01012024",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3- Tous les comptes",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstName\": \"Asma Amy\",\r\n    \"lastName\": \"FALL\",\r\n    \"solde\": 17500,\r\n    \"numeroCompte\": \"SN-20241102-5\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9090/clic/comptes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "comptes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4- transfert entre comptes",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"numeroCompteDestinataire\": \"{{premierCompte}}\",\r\n    \"numeroCompteExpediteur\": \"{{secondCompte}}\",\r\n    \"montantTransfert\": 2647\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:9090/clic/v1/transferer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "9090",
+          "path": [
+            "clic",
+            "v1",
+            "transferer"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "premierCompte",
+      "value": ""
+    },
+    {
+      "key": "secondCompte",
+      "value": ""
+    }
+  ]
+}

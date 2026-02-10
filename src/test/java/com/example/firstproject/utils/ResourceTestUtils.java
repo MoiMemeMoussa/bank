@@ -30,7 +30,6 @@ public class ResourceTestUtils {
         OperationCompteEntity operationCompteEntity = new OperationCompteEntity();
         operationCompteEntity.setMontantOperation(4500.0);
         operationCompteEntity.setTypeOperation(String.valueOf(TypeOperation.CREDIT));
-        operationCompteEntity.setMontantOperation(4500.0);
         return operationCompteEntity;
     }
 
