@@ -25,10 +25,6 @@ public class BankServiceImpl implements BankService {
 
     private static final String CE_COMPTE_EXISTE_DEJA = "Ce compte existe déja";
     private static final String CE_COMPTE_EXISTE_PAS = "Ce compte n'existe pas";
-    private static final String DEPOT_INITIAL = "Depot Initial";
-    private static final String OPERATION_DEPOT = "Depot";
-    private static final String OPERATION_RETRAIT = "Retrait";
-    private static final String RETRAIT_IMPOSSIBLE = "Retrait impossible: votre solde est inférieure à ce montant";
     private static final String SOLDE_INSUFFISANT = "Retrait impossible: Solde insuffisant";
 
     private final CompteRepository compteRepository;
