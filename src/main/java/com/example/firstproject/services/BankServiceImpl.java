@@ -3,12 +3,10 @@ package com.example.firstproject.services;
 import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.exceptions.RessourceExistanteException;
-import com.example.firstproject.exceptions.RessourceNonTrouveException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.repositories.CompteRepository;
-import com.example.firstproject.services.ra.RaValidation;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +25,8 @@ public class BankServiceImpl implements BankService {
 
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
-    private final CrediterServiceImpl crediterService;
-    private final DebiterServiceImpl debiterService;
+    private final CrediterService crediterService;
+    private final DebiterService debiterService;
     private final OperationCompteService operationCompteService;
 
     @Override

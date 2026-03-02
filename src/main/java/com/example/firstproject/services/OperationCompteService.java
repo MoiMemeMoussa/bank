@@ -6,14 +6,12 @@ import com.example.firstproject.exceptions.RessourceNonTrouveException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.repositories.CompteRepository;
-import com.example.firstproject.services.ra.RaValidation;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+//@NoArgsConstructor(force = true)
 public class OperationCompteService {
 
     private static final String CE_COMPTE_EXISTE_PAS = "Ce compte n'existe pas";
