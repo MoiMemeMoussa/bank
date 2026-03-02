@@ -26,7 +26,6 @@ public class CrediterService extends OperationCompteService {
 
     public CompteDto crediter(OperationCompteDto operationCredit) {
         raValidation.validerMontant(operationCredit.getMontantOperation().toString());
-
         CompteEntity compteValide = obtenirCompte(operationCredit);
         compteValide.setSolde(compteValide.getSolde() + operationCredit.getMontantOperation());
         return mapper.toCompteDto(compteRepository.save(compteValide));

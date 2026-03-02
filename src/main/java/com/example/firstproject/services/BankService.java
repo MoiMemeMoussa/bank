@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 public class BankService implements IBankService {
 
     private static final String CE_COMPTE_EXISTE_DEJA = "Ce compte existe déja";
-    private static final String CE_COMPTE_EXISTE_PAS = "Ce compte n'existe pas";
 
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
