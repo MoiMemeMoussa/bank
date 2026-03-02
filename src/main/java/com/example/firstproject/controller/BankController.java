@@ -4,7 +4,7 @@ import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
-import com.example.firstproject.services.BankServiceImpl;
+import com.example.firstproject.services.BankService;
 import com.example.firstproject.utils.BankConstantes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class BankController {
     private static final String ENDPOINT_OBTENIR_RELEVE_COMPTE = "/releves/{numeroCompte}";
     private static final String ENDPOINT_TRANSFERT = "/transferer";
 
-    private final BankServiceImpl bankService;
+    private final BankService bankService;
 
     @PostMapping(ENDPOINT_CREER_COMPTE)
     public ResponseEntity<CompteDto> creerCompte(@RequestBody @Valid CompteDto compte) {
