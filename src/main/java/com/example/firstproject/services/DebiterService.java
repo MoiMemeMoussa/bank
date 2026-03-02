@@ -2,6 +2,7 @@ package com.example.firstproject.services;
 
 import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.exceptions.MontantInvalideException;
+import com.example.firstproject.exceptions.RetraitImpossibleException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
@@ -36,7 +37,7 @@ public class DebiterService extends OperationCompteService {
 
     private void verfierMontantDebit(Double montantDebit, CompteEntity compteEntity) {
         if (compteEntity.getSolde() < montantDebit) {
-            throw new MontantInvalideException(SOLDE_INSUFFISANT);
+            throw new RetraitImpossibleException(SOLDE_INSUFFISANT);
         }
     }
 }
