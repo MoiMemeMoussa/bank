@@ -40,7 +40,7 @@ public class BankController {
     public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" operation - crediter ");
         operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
-        CompteDto resultat = bankService.crediterOuDebiter(operationCompteDto);
+        CompteDto resultat = bankService.crediter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
@@ -48,7 +48,7 @@ public class BankController {
     public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompte) {
         log.info(" start - debiter ");
         operationCompte.setTypeOperation(TypeOperation.DEBIT);
-        CompteDto resultat = bankService.crediterOuDebiter(operationCompte);
+        CompteDto resultat = bankService.debiter(operationCompte);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 

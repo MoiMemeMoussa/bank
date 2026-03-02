@@ -1,8 +1,8 @@
 package com.example.firstproject.services.ra;
 
 
-import com.example.firstproject.exceptions.IncorrectMontantException;
-import com.example.firstproject.exceptions.IncorrectOperationException;
+import com.example.firstproject.exceptions.MontantInvalideException;
+import com.example.firstproject.exceptions.OperationInvalideException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -10,21 +10,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class RaValidation {
 
-    private static final String LE_FORMAT_EST_INCORRECT = "Le montant de l'operation doit etre numerique";
-    private static final String MONTANT_OPERATION_INCORRECT = "Le montant de l'operation doit etre superieur à 0";
+    private static final String FORMAT_INVALIDE = "Le montant de l'operation doit etre numerique";
+    private static final String MONTANT_OPERATION_INVALIDE = "Le montant de l'operation doit etre superieur à 0";
 
     private double validerMontantEstNumerique(String montant) {
         try {
             return Double.parseDouble(montant);
         } catch (NumberFormatException exception) {
-            throw new IncorrectOperationException(LE_FORMAT_EST_INCORRECT);
+            throw new OperationInvalideException(FORMAT_INVALIDE);
         }
     }
 
     public void validerMontant(String montant) {
         double montantValide = validerMontantEstNumerique(montant);
         if (montantValide <= 0) {
-            throw new IncorrectMontantException(MONTANT_OPERATION_INCORRECT);
+            throw new MontantInvalideException(MONTANT_OPERATION_INVALIDE);
         }
     }
 }

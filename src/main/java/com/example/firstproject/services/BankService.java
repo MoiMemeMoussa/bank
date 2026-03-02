@@ -9,5 +9,7 @@ public interface BankService {
 
     CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert);
 
-    CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto);
+    CompteDto crediter(OperationCompteDto operationCompteDto);
+    CompteDto debiter (OperationCompteDto operationCompteDto);
+   // CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto);
 }

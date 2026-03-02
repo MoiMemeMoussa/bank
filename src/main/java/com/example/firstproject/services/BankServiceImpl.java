@@ -1,11 +1,9 @@
 package com.example.firstproject.services;
 
 import com.example.firstproject.entities.CompteEntity;
-import com.example.firstproject.entities.OperationCompteEntity;
 import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.exceptions.RessourceExistanteException;
 import com.example.firstproject.exceptions.RessourceNonTrouveException;
-import com.example.firstproject.exceptions.RetraitImpossibleException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
@@ -29,7 +27,9 @@ public class BankServiceImpl implements BankService {
 
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
-    private final RaValidation raValidation;
+    private final CrediterServiceImpl crediterService;
+    private final DebiterServiceImpl debiterService;
+    private final OperationCompteService operationCompteService;
 
     @Override
     public CompteDto creerCompte(CompteDto compteDto) {
@@ -42,42 +42,27 @@ public class BankServiceImpl implements BankService {
         return mapper.toCompteDto(compteRepository.save(compteEntity));
     }
 
-    @Transactional
-    public CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert) {
-        OperationCompteDto operationCredit = mapper.toOperationCompteDto(numeroCompteDestinataire, TypeOperation.CREDIT.getValeur(), montantTransfert);
-        crediterOuDebiter(operationCredit);
-        OperationCompteDto operationDebit = mapper.toOperationCompteDto(numeroCompteExpediteur, TypeOperation.DEBIT.getValeur(), montantTransfert);
-        return crediterOuDebiter(operationDebit);
+    @Override
+    public CompteDto crediter(OperationCompteDto operationCompteDto) {
+        return crediterService.crediter(operationCompteDto);
     }
 
     @Override
-    public CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto) {
-        raValidation.validerMontant(operationCompteDto.getMontantOperation().toString());
-        CompteEntity compteEntityExistant = obtenirDetailsCompte(operationCompteDto.getNumeroCompte());
+    public CompteDto debiter(OperationCompteDto operationCompteDto) {
+        return debiterService.debiter(operationCompteDto);
+    }
 
-        OperationCompteEntity operation = mapper.toOperationCompteEntity(operationCompteDto);
-        compteEntityExistant.getOperations().add(operation);
+    @Transactional
+    public CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert) {
+        OperationCompteDto operationCredit = mapper.toOperationCompteDto(numeroCompteDestinataire, TypeOperation.CREDIT.getValeur(), montantTransfert);
+        crediterService.crediter(operationCredit);
 
-        if (operationCompteDto.getTypeOperation().equals(TypeOperation.CREDIT)) {
-            compteEntityExistant.setSolde(compteEntityExistant.getSolde() + operation.getMontantOperation());
-        } else {
-            if (compteEntityExistant.getSolde() < operationCompteDto.getMontantOperation()) {
-                throw new RetraitImpossibleException(SOLDE_INSUFFISANT);
-            }
-            compteEntityExistant.setSolde(compteEntityExistant.getSolde() - operation.getMontantOperation());
-        }
-        CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteEntityExistant));
-        reponse.setOperations(null); //dont send informations about operations
-        return reponse;
+        OperationCompteDto operationDebit = mapper.toOperationCompteDto(numeroCompteExpediteur, TypeOperation.DEBIT.getValeur(), montantTransfert);
+        return debiterService.debiter(operationDebit);
     }
 
     public CompteDto obtenirReleveCompte(String numeroCompte) {
-        CompteEntity entity = obtenirDetailsCompte(numeroCompte);
+        CompteEntity entity = operationCompteService.obtenirDetailsCompte(numeroCompte);
         return mapper.toCompteDto(entity);
-    }
-
-    private CompteEntity obtenirDetailsCompte(String numeroCompte) {
-        return compteRepository.findById(numeroCompte)
-                .orElseThrow(() -> new RessourceNonTrouveException(CE_COMPTE_EXISTE_PAS));
     }
 }
