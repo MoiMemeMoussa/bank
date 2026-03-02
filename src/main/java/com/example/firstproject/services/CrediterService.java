@@ -9,7 +9,6 @@ import com.example.firstproject.services.ra.RaValidation;
 import org.springframework.stereotype.Service;
 
 @Service
-//@RequiredArgsConstructor
 public class CrediterService extends OperationCompteService {
 
     private final CompteRepository compteRepository;
@@ -30,8 +29,6 @@ public class CrediterService extends OperationCompteService {
 
         CompteEntity compteValide = obtenirCompte(operationCredit);
         compteValide.setSolde(compteValide.getSolde() + operationCredit.getMontantOperation());
-        CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteValide));
-        // reponse.setOperations(null);
-        return reponse;
+        return mapper.toCompteDto(compteRepository.save(compteValide));
     }
 }

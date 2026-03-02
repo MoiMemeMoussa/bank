@@ -1,6 +1,7 @@
 package com.example.firstproject.services;
 
 import com.example.firstproject.entities.CompteEntity;
+import com.example.firstproject.exceptions.MontantInvalideException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
@@ -9,8 +10,9 @@ import com.example.firstproject.services.ra.RaValidation;
 import org.springframework.stereotype.Service;
 
 @Service
-//@RequiredArgsConstructor
 public class DebiterService extends OperationCompteService {
+
+    private static final String SOLDE_INSUFFISANT = "Retrait impossible: Solde insuffisant";
 
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
@@ -26,11 +28,15 @@ public class DebiterService extends OperationCompteService {
 
     public CompteDto debiter(OperationCompteDto operationDebit) {
         raValidation.validerMontant(operationDebit.getMontantOperation().toString());
-
         CompteEntity compteValide = obtenirCompte(operationDebit);
+        verfierMontantDebit(operationDebit.getMontantOperation(), compteValide);
         compteValide.setSolde(compteValide.getSolde() - operationDebit.getMontantOperation());
-        CompteDto reponse = mapper.toCompteDto(compteRepository.save(compteValide));
-        //reponse.setOperations(null);
-        return reponse;
+        return mapper.toCompteDto(compteRepository.save(compteValide));
+    }
+
+    private void verfierMontantDebit(Double montantDebit, CompteEntity compteEntity) {
+        if (compteEntity.getSolde() < montantDebit) {
+            throw new MontantInvalideException(SOLDE_INSUFFISANT);
+        }
     }
 }

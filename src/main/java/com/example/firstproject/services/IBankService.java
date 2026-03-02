@@ -10,6 +10,6 @@ public interface IBankService {
     CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert);
 
     CompteDto crediter(OperationCompteDto operationCompteDto);
-    CompteDto debiter (OperationCompteDto operationCompteDto);
-   // CompteDto crediterOuDebiter(OperationCompteDto operationCompteDto);
+
+    CompteDto debiter(OperationCompteDto operationCompteDto);
 }
