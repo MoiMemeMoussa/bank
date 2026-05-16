@@ -4,7 +4,7 @@ import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
-import com.example.firstproject.services.BankServiceImpl;
+import com.example.firstproject.services.BankService;
 import com.example.firstproject.utils.BankConstantes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class BankController {
     private static final String ENDPOINT_OBTENIR_RELEVE_COMPTE = "/releves/{numeroCompte}";
     private static final String ENDPOINT_TRANSFERT = "/transferer";
 
-    private final BankServiceImpl bankService;
+    private final BankService bankService;
 
     @PostMapping(ENDPOINT_CREER_COMPTE)
     public ResponseEntity<CompteDto> creerCompte(@RequestBody @Valid CompteDto compte) {
@@ -40,7 +40,7 @@ public class BankController {
     public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" operation - crediter ");
         operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
-        CompteDto resultat = bankService.crediterOuDebiter(operationCompteDto);
+        CompteDto resultat = bankService.crediter(operationCompteDto);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
@@ -48,7 +48,7 @@ public class BankController {
     public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompte) {
         log.info(" start - debiter ");
         operationCompte.setTypeOperation(TypeOperation.DEBIT);
-        CompteDto resultat = bankService.crediterOuDebiter(operationCompte);
+        CompteDto resultat = bankService.debiter(operationCompte);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
