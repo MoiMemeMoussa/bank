@@ -29,14 +29,13 @@ public class DebiterService extends OperationCompteService {
     public CompteDto debiter(OperationCompteDto operationDebit) {
         reglesValidation.validerMontant(operationDebit.getMontantOperation().toString());
         CompteEntity compteValide = obtenirCompte(operationDebit);
-        verfierMontantDebit(operationDebit.getMontantOperation(), compteValide);
-        compteValide.setSolde(compteValide.getSolde() - operationDebit.getMontantOperation());
-        return mapper.toCompteDto(compteRepository.save(compteValide));
-    }
 
-    private void verfierMontantDebit(Double montantDebit, CompteEntity compteEntity) {
-        if (compteEntity.getSolde() < montantDebit) {
+        double solde = compteValide.getSolde();
+        if (solde < operationDebit.getMontantOperation()) {
             throw new RetraitImpossibleException(SOLDE_INSUFFISANT);
         }
+        compteValide.setSolde(solde - operationDebit.getMontantOperation());
+
+        return mapper.toCompteDto(compteRepository.save(compteValide));
     }
 }
