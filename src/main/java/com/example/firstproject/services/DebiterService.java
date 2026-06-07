@@ -1,13 +1,12 @@
 package com.example.firstproject.services;
 
 import com.example.firstproject.entities.CompteEntity;
-import com.example.firstproject.exceptions.MontantInvalideException;
 import com.example.firstproject.exceptions.RetraitImpossibleException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.repositories.CompteRepository;
-import com.example.firstproject.services.ra.RaValidation;
+import com.example.firstproject.services.ra.ReglesValidation;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,18 +16,18 @@ public class DebiterService extends OperationCompteService {
 
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
-    private final RaValidation raValidation;
+    private final ReglesValidation reglesValidation;
 
-    public DebiterService(CompteRepository compteRepository, EntityDtoMapper mapper, RaValidation raValidation) {
+    public DebiterService(CompteRepository compteRepository, EntityDtoMapper mapper, ReglesValidation reglesValidation) {
         super(compteRepository, mapper);
 
         this.compteRepository = compteRepository;
         this.mapper = mapper;
-        this.raValidation = raValidation;
+        this.reglesValidation = reglesValidation;
     }
 
     public CompteDto debiter(OperationCompteDto operationDebit) {
-        raValidation.validerMontant(operationDebit.getMontantOperation().toString());
+        reglesValidation.validerMontant(operationDebit.getMontantOperation().toString());
         CompteEntity compteValide = obtenirCompte(operationDebit);
         verfierMontantDebit(operationDebit.getMontantOperation(), compteValide);
         compteValide.setSolde(compteValide.getSolde() - operationDebit.getMontantOperation());

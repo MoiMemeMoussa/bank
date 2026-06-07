@@ -28,24 +28,24 @@ public class BankService implements IBankService {
     private final OperationCompteService operationCompteService;
 
     @Override
-    public CompteDto creerCompte(CompteDto compteDto) {
-        compteRepository.findById(compteDto.getNumeroCompte())
+    public CompteDto creerCompte(CompteDto compte) {
+        compteRepository.findById(compte.getNumeroCompte())
                 .ifPresent(compteEntity -> {
                     throw new RessourceExistanteException(CE_COMPTE_EXISTE_DEJA);
                 });
-        OperationCompteDto operationCompteDto = mapper.toOperationCompteDto(compteDto.getNumeroCompte(), TypeOperation.CREDIT.getValeur(), compteDto.getSolde());
-        CompteEntity compteEntity = mapper.toCompteEntity(compteDto, operationCompteDto);
+        OperationCompteDto operation = mapper.toOperationCompteDto(compte.getNumeroCompte(), TypeOperation.CREDIT.getValeur(), compte.getSolde());
+        CompteEntity compteEntity = mapper.toCompteEntity(compte, operation);
         return mapper.toCompteDto(compteRepository.save(compteEntity));
     }
 
     @Override
-    public CompteDto crediter(OperationCompteDto operationCompteDto) {
-        return crediterService.crediter(operationCompteDto);
+    public CompteDto crediter(OperationCompteDto operationCompte) {
+        return crediterService.crediter(operationCompte);
     }
 
     @Override
-    public CompteDto debiter(OperationCompteDto operationCompteDto) {
-        return debiterService.debiter(operationCompteDto);
+    public CompteDto debiter(OperationCompteDto operationCompte) {
+        return debiterService.debiter(operationCompte);
     }
 
     @Transactional

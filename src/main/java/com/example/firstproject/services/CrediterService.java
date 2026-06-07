@@ -5,7 +5,7 @@ import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.repositories.CompteRepository;
-import com.example.firstproject.services.ra.RaValidation;
+import com.example.firstproject.services.ra.ReglesValidation;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,19 +13,19 @@ public class CrediterService extends OperationCompteService {
 
     private final CompteRepository compteRepository;
     private final EntityDtoMapper mapper;
-    private final RaValidation raValidation;
+    private final ReglesValidation reglesValidation;
 
-    public CrediterService(CompteRepository compteRepository, EntityDtoMapper mapper, RaValidation raValidation) {
+    public CrediterService(CompteRepository compteRepository, EntityDtoMapper mapper, ReglesValidation reglesValidation) {
         super(compteRepository, mapper);
 
         this.compteRepository = compteRepository;
         this.mapper = mapper;
-        this.raValidation = raValidation;
+        this.reglesValidation = reglesValidation;
     }
 
 
     public CompteDto crediter(OperationCompteDto operationCredit) {
-        raValidation.validerMontant(operationCredit.getMontantOperation().toString());
+        reglesValidation.validerMontant(operationCredit.getMontantOperation().toString());
         CompteEntity compteValide = obtenirCompte(operationCredit);
         compteValide.setSolde(compteValide.getSolde() + operationCredit.getMontantOperation());
         return mapper.toCompteDto(compteRepository.save(compteValide));
