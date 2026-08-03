@@ -1,7 +1,6 @@
 package com.example.firstproject.services;
 
 import com.example.firstproject.entities.CompteEntity;
-import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.exceptions.RessourceExistanteException;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
@@ -12,6 +11,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import static com.example.firstproject.entities.TypeOperation.CREDIT;
+import static com.example.firstproject.entities.TypeOperation.DEBIT;
 
 @Getter
 @Slf4j
@@ -33,7 +35,7 @@ public class BankService implements IBankService {
                 .ifPresent(compteEntity -> {
                     throw new RessourceExistanteException(CE_COMPTE_EXISTE_DEJA);
                 });
-        OperationCompteDto operation = mapper.toOperationCompteDto(compte.getNumeroCompte(), TypeOperation.CREDIT.getValeur(), compte.getSolde());
+        OperationCompteDto operation = mapper.toOperationCompteDto(compte, CREDIT);
         CompteEntity compteEntity = mapper.toCompteEntity(compte, operation);
         return mapper.toCompteDto(compteRepository.save(compteEntity));
     }
@@ -50,15 +52,29 @@ public class BankService implements IBankService {
 
     @Transactional
     public CompteDto tranferer(String numeroCompteExpediteur, String numeroCompteDestinataire, Double montantTransfert) {
-        OperationCompteDto operationCredit = mapper.toOperationCompteDto(numeroCompteDestinataire, TypeOperation.CREDIT.getValeur(), montantTransfert);
-        crediterService.crediter(operationCredit);
 
-        OperationCompteDto operationDebit = mapper.toOperationCompteDto(numeroCompteExpediteur, TypeOperation.DEBIT.getValeur(), montantTransfert);
-        return debiterService.debiter(operationDebit);
+        CompteDto destinataire = getCompteDto(numeroCompteDestinataire, montantTransfert);
+        OperationCompteDto operationCredit = mapper.toOperationCompteDto(destinataire, CREDIT);
+
+        // créditer le compte
+        crediter(operationCredit);
+
+        CompteDto expediteur = getCompteDto(numeroCompteExpediteur, montantTransfert);
+        OperationCompteDto operationDebit = mapper.toOperationCompteDto(expediteur, DEBIT);
+
+        // débiter le compte
+        return debiter(operationDebit);
     }
 
     public CompteDto obtenirReleveCompte(String numeroCompte) {
         CompteEntity entity = operationCompteService.obtenirDetailsCompte(numeroCompte);
         return mapper.toCompteDto(entity);
+    }
+
+    private CompteDto getCompteDto(String numeroCompte, Double montant) {
+        CompteDto compteDto = new CompteDto();
+        compteDto.setNumeroCompte(numeroCompte);
+        compteDto.setSolde(montant);
+        return compteDto;
     }
 }

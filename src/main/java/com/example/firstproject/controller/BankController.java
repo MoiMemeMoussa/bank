@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.firstproject.entities.TypeOperation.CREDIT;
-import static com.example.firstproject.entities.TypeOperation.DEBIT;
 import static com.example.firstproject.utils.BankConstantes.URI;
 
 @Validated
@@ -41,7 +39,6 @@ public class BankController {
     @PatchMapping(ENDPOINT_CREDITER_COMPTE)
     public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" opération - créditer un compte ");
-        operationCompteDto.setTypeOperation(CREDIT);
         CompteDto compte = bankService.crediter(operationCompteDto);
         return new ResponseEntity<>(compte, HttpStatus.OK);
     }
@@ -49,7 +46,6 @@ public class BankController {
     @PatchMapping(ENDPOINT_DEBITER_COMPTE)
     public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompte) {
         log.info(" opération - débiter un compte ");
-        operationCompte.setTypeOperation(DEBIT);
         CompteDto resultat = bankService.debiter(operationCompte);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
@@ -63,7 +59,7 @@ public class BankController {
 
     @GetMapping(ENDPOINT_OBTENIR_RELEVE_COMPTE)
     public ResponseEntity<CompteDto> releveCompte(@PathVariable String numeroCompte) {
-        log.info(" opération - obtenir relevé d\'un compte");
+        log.info(" opération - obtenir relevé d'un compte");
         CompteDto compte = bankService.obtenirReleveCompte(numeroCompte);
         return new ResponseEntity<>(compte, HttpStatus.OK);
     }
