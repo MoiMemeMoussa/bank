@@ -1,6 +1,7 @@
 package com.example.firstproject.services;
 
 import com.example.firstproject.entities.CompteEntity;
+import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.mappers.EntityDtoMapper;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
