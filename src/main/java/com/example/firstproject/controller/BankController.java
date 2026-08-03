@@ -41,7 +41,6 @@ public class BankController {
     @PatchMapping(ENDPOINT_CREDITER_COMPTE)
     public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
         log.info(" opération - créditer un compte ");
-        operationCompteDto.setTypeOperation(CREDIT);
         CompteDto compte = bankService.crediter(operationCompteDto);
         return new ResponseEntity<>(compte, HttpStatus.OK);
     }
@@ -49,7 +48,6 @@ public class BankController {
     @PatchMapping(ENDPOINT_DEBITER_COMPTE)
     public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompte) {
         log.info(" opération - débiter un compte ");
-        operationCompte.setTypeOperation(DEBIT);
         CompteDto resultat = bankService.debiter(operationCompte);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
