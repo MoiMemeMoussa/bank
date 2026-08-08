@@ -2,17 +2,14 @@ package com.example.firstproject.mappers;
 
 import com.example.firstproject.entities.CompteEntity;
 import com.example.firstproject.entities.OperationCompteEntity;
+import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.firstproject.utils.BankConstantes.getDateDuJour;
 
 @Mapper(componentModel = "spring")
 public interface EntityDtoMapper {
@@ -26,10 +23,10 @@ public interface EntityDtoMapper {
     CompteEntity toCompteEntity(CompteDto compteDto, OperationCompteDto operationCompteDto);
 
     @Mapping(target = "dateOperation", ignore = true)
-    @Mapping(target = "numeroCompte", source = "numeroCompte")
-    @Mapping(target = "typeOperation", source = "operationCompte")
-    @Mapping(target = "montantOperation", source = "montantOperation")
-    OperationCompteDto toOperationCompteDto(String numeroCompte, String operationCompte, Double montantOperation);
+    @Mapping(target = "numeroCompte", source = "compteDto.numeroCompte")
+    @Mapping(target = "typeOperation", source = "typeOperation")
+    @Mapping(target = "montantOperation", source = "compteDto.solde")
+    OperationCompteDto toOperationCompteDto(CompteDto compteDto, TypeOperation typeOperation);
 
     @Mapping(target = "dateModification", ignore = true)
     @Mapping(target = "idOperation", ignore = true)

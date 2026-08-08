@@ -9,6 +9,8 @@ import com.example.firstproject.repositories.CompteRepository;
 import com.example.firstproject.services.ra.ReglesValidation;
 import org.springframework.stereotype.Service;
 
+import static com.example.firstproject.entities.TypeOperation.DEBIT;
+
 @Service
 public class DebiterService extends OperationCompteService {
 
@@ -28,6 +30,8 @@ public class DebiterService extends OperationCompteService {
 
     public CompteDto debiter(OperationCompteDto operationDebit) {
         reglesValidation.validerMontant(operationDebit.getMontantOperation().toString());
+
+        operationDebit.setTypeOperation(DEBIT);
         CompteEntity compteValide = obtenirCompte(operationDebit);
 
         double solde = compteValide.getSolde();

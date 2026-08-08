@@ -10,21 +10,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReglesValidation {
 
-    private static final String FORMAT_INVALIDE = "Le montant de l'operation doit etre numerique";
-    private static final String MONTANT_OPERATION_INVALIDE = "Le montant de l'operation doit etre superieur à 0";
+    private static final String MONTANT_OPERATION_INVALIDE = "Le montant de l'operation doit etre numerique";
+    private static final String MONTANT_OPERATION_INFERIEUR_OU_EGAL_ZERO = "Le montant de l'operation est incorrecte: valeur <= 0";
 
     public void validerMontant(String montant) {
-        double montantValide = validerMontantEstNumerique(montant);
+        double montantValide = obtenirMontantValide(montant);
         if (montantValide <= 0) {
-            throw new MontantInvalideException(MONTANT_OPERATION_INVALIDE);
+            throw new MontantInvalideException(MONTANT_OPERATION_INFERIEUR_OU_EGAL_ZERO);
         }
     }
 
-    private double validerMontantEstNumerique(String montant) {
+    private double obtenirMontantValide(String montant) {
         try {
             return Double.parseDouble(montant);
         } catch (NumberFormatException exception) {
-            throw new OperationInvalideException(FORMAT_INVALIDE);
+            throw new OperationInvalideException(MONTANT_OPERATION_INVALIDE);
         }
     }
 }

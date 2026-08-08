@@ -1,11 +1,9 @@
 package com.example.firstproject.controller;
 
-import com.example.firstproject.entities.TypeOperation;
 import com.example.firstproject.models.CompteDto;
 import com.example.firstproject.models.OperationCompteDto;
 import com.example.firstproject.models.TransfertCompteDto;
 import com.example.firstproject.services.BankService;
-import com.example.firstproject.utils.BankConstantes;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.example.firstproject.utils.BankConstantes.URI;
+
 @Validated
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(BankConstantes.URI)
+@RequestMapping(URI)
 @RestController
 public class BankController {
 
@@ -30,37 +30,37 @@ public class BankController {
     private final BankService bankService;
 
     @PostMapping(ENDPOINT_CREER_COMPTE)
-    public ResponseEntity<CompteDto> creerCompte(@RequestBody @Valid CompteDto compte) {
-        log.info(" start - creation du compte ");
-        CompteDto resultat = bankService.creerCompte(compte);
-        return new ResponseEntity<>(resultat, HttpStatus.CREATED);
+    public ResponseEntity<CompteDto> creerCompte(@RequestBody @Valid CompteDto compteDto) {
+        log.info(" opération - créer un compte ");
+        CompteDto compte = bankService.creerCompte(compteDto);
+        return new ResponseEntity<>(compte, HttpStatus.CREATED);
     }
 
     @PatchMapping(ENDPOINT_CREDITER_COMPTE)
     public ResponseEntity<CompteDto> crediter(@RequestBody OperationCompteDto operationCompteDto) {
-        log.info(" operation - crediter ");
-        operationCompteDto.setTypeOperation(TypeOperation.CREDIT);
-        CompteDto resultat = bankService.crediter(operationCompteDto);
-        return new ResponseEntity<>(resultat, HttpStatus.OK);
+        log.info(" opération - créditer un compte ");
+        CompteDto compte = bankService.crediter(operationCompteDto);
+        return new ResponseEntity<>(compte, HttpStatus.OK);
     }
 
     @PatchMapping(ENDPOINT_DEBITER_COMPTE)
     public ResponseEntity<CompteDto> debiter(@RequestBody OperationCompteDto operationCompte) {
-        log.info(" start - debiter ");
-        operationCompte.setTypeOperation(TypeOperation.DEBIT);
+        log.info(" opération - débiter un compte ");
         CompteDto resultat = bankService.debiter(operationCompte);
         return new ResponseEntity<>(resultat, HttpStatus.OK);
     }
 
     @PostMapping(ENDPOINT_TRANSFERT)
     public ResponseEntity<CompteDto> transferer(@RequestBody TransfertCompteDto transfert) {
+        log.info(" opération - transfert compte à compte");
         CompteDto compteDto = bankService.tranferer(transfert.getNumeroCompteExpediteur(), transfert.getNumeroCompteDestinataire(), transfert.getMontantTransfert());
         return new ResponseEntity<>(compteDto, HttpStatus.OK);
     }
 
     @GetMapping(ENDPOINT_OBTENIR_RELEVE_COMPTE)
     public ResponseEntity<CompteDto> releveCompte(@PathVariable String numeroCompte) {
-        CompteDto reponse = bankService.obtenirReleveCompte(numeroCompte);
-        return new ResponseEntity<>(reponse, HttpStatus.OK);
+        log.info(" opération - obtenir relevé d'un compte");
+        CompteDto compte = bankService.obtenirReleveCompte(numeroCompte);
+        return new ResponseEntity<>(compte, HttpStatus.OK);
     }
 }
